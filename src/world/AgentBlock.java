@@ -21,11 +21,13 @@ public class AgentBlock implements Comparable{
 
 
     public void neighbourUpdate(boolean hasBreeze, boolean hasStench){
-        pitPossible = (visited || sureOfPit) && pitPossible;
-        pitPossible =!(visited || sureOfPit) && hasBreeze;
+        pitPossible = (visited || sureOfPit)? pitPossible : hasBreeze;
+//        pitPossible =!(visited || sureOfPit) && hasBreeze;
 
-        wumpusPossible = (visited || sureOfWumpus) && wumpusPossible;
-        wumpusPossible =!(visited || sureOfWumpus) && hasStench;
+       
+
+        wumpusPossible = (visited || sureOfWumpus) ? wumpusPossible : hasStench;
+//        wumpusPossible =!(visited || sureOfWumpus) && hasStench;
 
         sureOfPit = !hasBreeze || sureOfPit;
         sureOfWumpus = !hasStench || sureOfWumpus;

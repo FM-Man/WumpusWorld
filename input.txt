@@ -2,5 +2,3 @@ s,s,s,p
 w,g,p,s
 s,s,s,s
 a,s,p,s
-
-
