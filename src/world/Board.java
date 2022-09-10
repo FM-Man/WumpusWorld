@@ -8,6 +8,7 @@ import java.util.Scanner;
 public class Board {
     private final int dimension=4;
     private final AgentBlock[][] blocks;
+    private AgentBlock currentBlock;
 
 
 
@@ -23,12 +24,73 @@ public class Board {
             throw new RuntimeException(e);
         }
 
+        int[][] informationArray = new int[dimension][dimension];
         for (int i=0; scanner.hasNextLine(); i++){
             String[] line = scanner.nextLine().split(",",0);
             for (int j=0; j<line.length;j++){
-                
+                switch (line[j]) {
+                    case "a", "A" -> informationArray[i][j] = 0;
+                    case "w", "W" -> informationArray[i][j] = 1;
+                    case "s", "S" -> informationArray[i][j] = 2;
+                    case "g", "G" -> informationArray[i][j] = 3;
+                    default -> informationArray[i][j] = 4;
+                }
             }
         }
+
+        for (int i=0; i<dimension;i++){
+            for (int j=0;j<dimension;j++){
+                InformationBlock ib;
+                AgentBlock ab;
+                boolean isPit=false;
+                boolean isBreeze=false;
+                boolean isWumpus=false;
+                boolean isStenchy=false;
+                boolean isGlittery=false;
+
+                if(informationArray[i][j]==0){
+                    ib = new InformationBlock(isStenchy,isWumpus,isBreeze,isPit,isGlittery);
+                    ab = new AgentBlock(i,j,ib);
+                    currentBlock =ab;
+                }
+                else {
+                    if(i<dimension-1) {
+                        if (informationArray[i + 1][j] == 1)
+                            isStenchy = true;
+                        else if(informationArray[i+1][j]==4)
+                            isBreeze = true;
+                    }
+                    if(i>0) {
+                        if (informationArray[i - 1][j] == 1)
+                            isStenchy = true;
+                        else if(informationArray[i-1][j]==4)
+                            isBreeze = true;
+                    }
+                    if(j<dimension-1){
+                        if (informationArray[i][j+1] == 1)
+                            isStenchy = true;
+                        else if(informationArray[i][j+1]==4)
+                            isBreeze = true;
+                    }
+                    if(j>0){
+                        if (informationArray[i][j-1] == 1)
+                            isStenchy = true;
+                        else if(informationArray[i][j-1]==4)
+                            isBreeze = true;
+                    }
+
+                    if(informationArray[i][j]==1) isWumpus = true;
+                    else if(informationArray[i][j]==3) isGlittery = true;
+                    else if(informationArray[i][j]==4) isPit = true;
+
+                    ib = new InformationBlock(isStenchy,isWumpus,isBreeze,isPit,isGlittery);
+                    ab = new AgentBlock(i,j,ib);
+                }
+                blocks[i][j] = ab;
+            }
+        }
+
+
 
     }
     public static Board getInstance(){
@@ -48,4 +110,7 @@ public class Board {
         return a;
     }
 
+    public AgentBlock getCurrentBlock(){
+        return currentBlock;
+    }
 }

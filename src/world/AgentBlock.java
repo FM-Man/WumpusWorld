@@ -29,14 +29,18 @@ public class AgentBlock {
         sureOfWumpus = !hasStench || sureOfWumpus;
     }
 
-    public boolean visit(){
+    public int visit(){
+        if(block.isWithGold())
+            return 1;
+
         visited = true;
         sureOfWumpus = true;
         sureOfPit = true;
         pitPossible = block.isWithPit();
         wumpusPossible = block.isWithWumpus();
 
-        if(pitPossible || wumpusPossible) return false;
+        if(pitPossible || wumpusPossible)
+            return -1;
         else {
             for (AgentBlock a:
                     Board.getInstance().
@@ -47,7 +51,7 @@ public class AgentBlock {
                         block.isStench()
                 );
             }
-            return true;
+            return 0;
         }
     }
 
