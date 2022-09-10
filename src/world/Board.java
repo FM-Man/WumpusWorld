@@ -1,5 +1,7 @@
 package world;
 
+import common.Instruction;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -9,8 +11,6 @@ public class Board {
     private final int dimension=4;
     private final AgentBlock[][] blocks;
     private AgentBlock currentBlock;
-
-
 
     private static Board instance = null;
     private Board() {
@@ -100,7 +100,6 @@ public class Board {
         return instance;
     }
 
-
     public ArrayList<AgentBlock> getNeighbours(int i, int j){
         ArrayList<AgentBlock> a = new ArrayList<>();
         if(i<dimension-1) a.add(blocks[i+1][j]);
@@ -109,8 +108,21 @@ public class Board {
         if(j>0) a.add(blocks[i][j-1]);
         return a;
     }
-
     public AgentBlock getCurrentBlock(){
         return currentBlock;
+    }
+    public void setCurrentBlock(Instruction instruction){
+        if(instruction.equals(Instruction.LEFT)){
+            currentBlock = blocks[currentBlock.i()][currentBlock.j()-1];
+        }
+        else if(instruction.equals(Instruction.RIGHT)){
+            currentBlock = blocks[currentBlock.i()][currentBlock.j()+1];
+        }
+        else if(instruction.equals(Instruction.UP)){
+            currentBlock = blocks[currentBlock.i()-1][currentBlock.j()];
+        }
+        else{
+            currentBlock = blocks[currentBlock.i()+1][currentBlock.j()];
+        }
     }
 }

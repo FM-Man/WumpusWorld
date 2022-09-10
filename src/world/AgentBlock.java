@@ -1,6 +1,8 @@
 package world;
 
-public class AgentBlock {
+import java.util.ArrayList;
+
+public class AgentBlock implements Comparable{
     private final int i;
     private final int j;
     private final InformationBlock block;
@@ -30,6 +32,7 @@ public class AgentBlock {
     }
 
     public int visit(){
+        System.out.println(i+","+j+" visited.");
         if(block.isWithGold())
             return 1;
 
@@ -42,17 +45,44 @@ public class AgentBlock {
         if(pitPossible || wumpusPossible)
             return -1;
         else {
-            for (AgentBlock a:
-                    Board.getInstance().
-                    getNeighbours(i,j)
-            ){
-                a.neighbourUpdate(
-                        block.isBreezy(),
-                        block.isStench()
-                );
+            ArrayList<AgentBlock> neighbours =Board.getInstance().getNeighbours(i,j);
+            for (AgentBlock a:neighbours){
+                a.neighbourUpdate(isBreezy(), isStenchy());
             }
             return 0;
         }
     }
 
+    public boolean isSafe(){
+        return !(pitPossible || wumpusPossible);
+    }
+    public boolean haveWumpus(){
+        return sureOfWumpus && wumpusPossible;
+    }
+    public boolean hasPit(){
+        return sureOfPit && pitPossible;
+    }
+    public boolean isBreezy(){
+        return block.isBreezy();
+    }
+    public boolean isStenchy(){
+        return  block.isStench();
+    }
+    public boolean isVisited(){return visited;}
+
+    public int i(){return i;}
+    public int j(){return j;}
+
+
+    @Override
+    public int compareTo(Object o) {
+        return this.value()-((AgentBlock) o).value();
+    }
+
+    public int value(){
+        int val =0;
+        val += isSafe()?2:-2;
+        val += isVisited()?-1:1;
+        return val;
+    }
 }
