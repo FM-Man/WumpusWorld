@@ -39,26 +39,41 @@ public class Agent {
                         break;
                     }
                 }
-                boolean nonVisitedFound = false;
+                boolean nonVisitedSafeFound = false;
                 for (AgentBlock nb:neighbours){
                     if(nb.isSafe() && !nb.isVisited()){
                         Instruction instruction = getInstruction(cb,nb);
                         System.out.println("Move "+instruction.name());
                         Board.getInstance().setCurrentBlock(instruction);
-                        nonVisitedFound = true;
+                        nonVisitedSafeFound = true;
                         break;
                     }
                 }
-                if(!nonVisitedFound){
+                boolean safeFound = false;
+                if(!nonVisitedSafeFound){
                     for (AgentBlock nb:neighbours){
                         if(nb.isSafe()){
                             Instruction instruction = getInstruction(cb,nb);
                             System.out.println("Move "+instruction.name());
                             Board.getInstance().setCurrentBlock(instruction);
+                            safeFound = true;
                             break;
                         }
                     }
                 }
+                boolean nonVisitedUnsafeFound = false;
+                if(!safeFound && !nonVisitedSafeFound){
+                    for (AgentBlock nb:neighbours){
+                        if(!nb.isVisited()){
+                            Instruction instruction = getInstruction(cb,nb);
+                            System.out.println("Move "+instruction.name());
+                            Board.getInstance().setCurrentBlock(instruction);
+                            nonVisitedUnsafeFound = true;
+                            break;
+                        }
+                    }
+                }
+                
             }
         }
     }

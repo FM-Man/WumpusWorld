@@ -2,7 +2,7 @@ package world;
 
 import java.util.ArrayList;
 
-public class AgentBlock implements Comparable{
+public class AgentBlock{
     private final int i;
     private final int j;
     private final InformationBlock block;
@@ -70,16 +70,4 @@ public class AgentBlock implements Comparable{
     public int i(){return i;}
     public int j(){return j;}
 
-
-    @Override
-    public int compareTo(Object o) {
-        return this.value()-((AgentBlock) o).value();
-    }
-
-    public int value(){
-        int val =0;
-        val += isSafe()?2:-2;
-        val += isVisited()?-1:1;
-        return val;
-    }
 }
