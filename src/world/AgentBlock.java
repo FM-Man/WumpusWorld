@@ -21,7 +21,7 @@ public class AgentBlock{
 
 
     public void neighbourUpdate(boolean hasBreeze, boolean hasStench){
-        pitPossible = ((visited || sureOfPit) && pitPossible) || (!(visited || sureOfPit) && hasBreeze);
+        pitPossible = ((visited || sureOfPit) && pitPossible) || (!visited && !sureOfPit && hasBreeze);
         wumpusPossible = ((visited || sureOfWumpus) && wumpusPossible) || (!(visited || sureOfWumpus) && hasStench);
 
         sureOfPit = !hasBreeze || sureOfPit;
@@ -65,7 +65,9 @@ public class AgentBlock{
     public boolean isStenchy(){
         return  block.isStench();
     }
-    public boolean isVisited(){return visited;}
+    public boolean isUnvisited(){
+        return !visited;
+    }
 
     public int i(){return i;}
     public int j(){return j;}

@@ -5,7 +5,6 @@ import world.AgentBlock;
 import world.Board;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class Agent {
     public Agent(){
@@ -41,7 +40,7 @@ public class Agent {
                 }
                 boolean nonVisitedSafeFound = false;
                 for (AgentBlock nb:neighbours){
-                    if(nb.isSafe() && !nb.isVisited()){
+                    if(nb.isSafe() && nb.isUnvisited()){
                         Instruction instruction = getInstruction(cb,nb);
                         System.out.println("Move "+instruction.name());
                         Board.getInstance().setCurrentBlock(instruction);
@@ -64,7 +63,7 @@ public class Agent {
                 boolean nonVisitedUnsafeFound = false;
                 if(!safeFound && !nonVisitedSafeFound){
                     for (AgentBlock nb:neighbours){
-                        if(!nb.isVisited()){
+                        if(nb.isUnvisited()){
                             Instruction instruction = getInstruction(cb,nb);
                             System.out.println("Move "+instruction.name());
                             Board.getInstance().setCurrentBlock(instruction);
