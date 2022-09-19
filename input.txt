@@ -1,4 +1,10 @@
-s,s,s,p
-w,g,p,s
-s,s,s,s
-a,s,p,s
+s,s,s,s,s,s,s,s,s,s
+s,s,s,s,s,s,s,s,s,s
+s,s,s,s,s,s,s,s,s,s
+s,s,s,s,s,s,s,s,s,s
+s,s,s,s,s,s,s,s,s,s
+s,s,s,s,s,s,s,s,s,s
+s,s,s,p,s,s,s,s,s,s
+w,g,p,s,s,s,s,s,s,s
+s,s,g,s,s,s,s,s,s,s
+a,s,p,s,s,s,s,s,s,s

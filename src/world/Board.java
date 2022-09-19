@@ -8,9 +8,11 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Board {
-    private final int dimension=4;
+    private final int dimension=10;
     private final AgentBlock[][] blocks;
     private AgentBlock currentBlock;
+    private int numberOfGold;
+    private int goldFound;
 
     private static Board instance = null;
     private Board() {
@@ -80,7 +82,10 @@ public class Board {
                     }
 
                     if(informationArray[i][j]==1) isWumpus = true;
-                    else if(informationArray[i][j]==3) isGlittery = true;
+                    else if(informationArray[i][j]==3) {
+                        isGlittery = true;
+                        numberOfGold++;
+                    }
                     else if(informationArray[i][j]==4) isPit = true;
 
                     ib = new InformationBlock(isStenchy,isWumpus,isBreeze,isPit,isGlittery);
@@ -124,5 +129,11 @@ public class Board {
         else{
             currentBlock = blocks[currentBlock.i()+1][currentBlock.j()];
         }
+    }
+    public int goldFound(){
+        goldFound++;
+        System.out.println("Gold Found. "+ (numberOfGold-goldFound)+" gold left");
+        if(goldFound>=numberOfGold) return 1;
+        else return 0;
     }
 }

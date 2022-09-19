@@ -16,7 +16,6 @@ public class Agent {
             int result = cb.visit();
 
             if(result==1){
-                System.out.println("Gold found." );
                 break;
             }
             if (result==-1){
@@ -83,4 +82,5 @@ public class Agent {
         else if(nb.i()==cb.i()+1) return Instruction.DOWN;
         else return Instruction.UP;
     }
+
 }

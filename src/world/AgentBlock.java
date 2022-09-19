@@ -31,7 +31,8 @@ public class AgentBlock{
     public int visit(){
         System.out.println(i+","+j+" visited.");
         if(block.isWithGold())
-            return 1;
+            if(Board.getInstance().goldFound()==1)
+                return 1;
 
         visited = true;
         sureOfWumpus = true;
