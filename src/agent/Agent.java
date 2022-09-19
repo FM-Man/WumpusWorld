@@ -13,7 +13,7 @@ public class Agent {
 //        GUI_Frame.getInstance();
         while (true){
 
-            GUI_Frame.getInstance().updateFrame();
+//            GUI_Frame.getInstance().updateFrame();
 
             steps++;
             AgentBlock cb = Board.getInstance().getCurrentBlock();

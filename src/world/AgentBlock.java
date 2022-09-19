@@ -12,6 +12,11 @@ public class AgentBlock{
     private boolean sureOfPit;
     private boolean sureOfWumpus;
 
+    private int breeze = State.NotKnown;
+    private int stench = State.NotKnown;
+    private int pit = State.NotKnown;
+    private int wumpus = State.NotKnown;
+
     public AgentBlock(int i, int j, InformationBlock block) {
         this.i = i;
         this.j = j;
@@ -26,19 +31,36 @@ public class AgentBlock{
 
         sureOfPit = !hasBreeze || sureOfPit;
         sureOfWumpus = !hasStench || sureOfWumpus;
+
+        if(sureOfPit && pitPossible) pit = State.Exists;
+        else if(sureOfPit) pit = State.Impossible;
+        else if(pitPossible) pit = State.Possible;
+        else pit = State.NotKnown;
+
+        if(sureOfWumpus && wumpusPossible) wumpus = State.Exists;
+        else if(sureOfWumpus) wumpus = State.Impossible;
+        else if(wumpusPossible) wumpus = State.Possible;
+        else wumpus = State.NotKnown;
     }
 
     public int visit(){
-        System.out.println(i+","+j+" visited.");
-        if(block.isWithGold())
-            if(Board.getInstance().goldFound()==1)
-                return 1;
-
         visited = true;
         sureOfWumpus = true;
         sureOfPit = true;
         pitPossible = block.isWithPit();
         wumpusPossible = block.isWithWumpus();
+
+
+        if(isBreezy()) breeze=State.Exists;
+        else breeze=State.Impossible;
+        if(isBreezy()) stench = State.Exists;
+        else stench = State.Impossible;
+
+
+        System.out.println(i+","+j+" visited.");
+        if(block.isWithGold())
+            if(Board.getInstance().goldFound()==1)
+                return 1;
 
         if(pitPossible || wumpusPossible)
             return -1;
@@ -72,5 +94,25 @@ public class AgentBlock{
 
     public int i(){return i;}
     public int j(){return j;}
+
+    public String state (){
+        String s ="";
+        s+= visited ? "v" : " ";
+        s+= breeze == State.Exists ? "b" : " ";
+        s+= stench == State.Exists ? "s" : " ";
+
+        switch (wumpus) {
+            case State.Exists -> s += "w";
+            case State.Possible -> s += "?";
+            default -> s += " ";
+        }
+        switch (pit) {
+            case State.Exists -> s += "p";
+            case State.Possible -> s += "?";
+            default -> s += " ";
+        }
+
+        return s;
+    }
 
 }
