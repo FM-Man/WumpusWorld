@@ -1,6 +1,7 @@
 package agent;
 
 import common.Instruction;
+import gui.GUI_Frame;
 import world.AgentBlock;
 import world.Board;
 
@@ -9,7 +10,11 @@ import java.util.ArrayList;
 public class Agent {
     public Agent(){
         int steps = 0;
+//        GUI_Frame.getInstance();
         while (true){
+
+            GUI_Frame.getInstance().updateFrame();
+
             steps++;
             AgentBlock cb = Board.getInstance().getCurrentBlock();
             System.out.print("STEP-"+ steps +": ");
@@ -73,6 +78,8 @@ public class Agent {
                 }
                 
             }
+
+            GUI_Frame.getInstance().updateFrame();
         }
     }
 

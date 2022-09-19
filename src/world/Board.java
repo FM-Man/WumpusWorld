@@ -136,4 +136,7 @@ public class Board {
         if(goldFound>=numberOfGold) return 1;
         else return 0;
     }
+    public AgentBlock[][] getBlocks(){
+        return blocks;
+    }
 }
