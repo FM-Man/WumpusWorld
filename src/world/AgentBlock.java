@@ -6,6 +6,9 @@ public class AgentBlock{
     private final int i;
     private final int j;
     private final InformationBlock block;
+
+    private final ArrayList<AgentBlock> neighbours;
+
     private boolean visited;
     private boolean pitPossible;
     private boolean wumpusPossible;
@@ -22,6 +25,8 @@ public class AgentBlock{
         this.j = j;
         this.block = block;
         visited = pitPossible = wumpusPossible = sureOfPit = sureOfWumpus = false;
+
+        neighbours = Board.getInstance().getNeighbours(this.i,this.j);
     }
 
 
@@ -31,6 +36,15 @@ public class AgentBlock{
 
         sureOfPit = !hasBreeze || sureOfPit;
         sureOfWumpus = !hasStench || sureOfWumpus;
+
+
+
+//        if (hasBreeze) neighbourBreeze(State.Exists);
+//        else neighbourBreeze(State.Impossible);
+//        if(hasStench) neighbourStench(State.Exists);
+//        else neighbourStench(State.Impossible);
+
+
 
         if(sureOfPit && pitPossible) pit = State.Exists;
         else if(sureOfPit) pit = State.Impossible;
@@ -51,36 +65,54 @@ public class AgentBlock{
         wumpusPossible = block.isWithWumpus();
 
 
+
+        if(pitPossible) pit=State.Exists;
+        else pit=State.Impossible;
+        if(wumpusPossible) wumpus=State.Exists;
+        else wumpus = State.Impossible;
+
         if(isBreezy()) breeze=State.Exists;
         else breeze=State.Impossible;
-        if(isBreezy()) stench = State.Exists;
+        if(isStenchy()) stench = State.Exists;
         else stench = State.Impossible;
+
+
 
 
         System.out.println(i+","+j+" visited.");
         if(block.isWithGold())
             if(Board.getInstance().goldFound()==1)
                 return 1;
-
         if(pitPossible || wumpusPossible)
             return -1;
         else {
-            ArrayList<AgentBlock> neighbours =Board.getInstance().getNeighbours(i,j);
             for (AgentBlock a:neighbours){
-                a.neighbourUpdate(isBreezy(), isStenchy());
+//                a.neighbourUpdate(isBreezy(), isStenchy());
+                if(isBreezy())
+                    a.neighbourBreeze(State.Exists,this);
+                else a.neighbourBreeze(State.Impossible,this);
+                if(isStenchy())
+                    a.neighbourStench(State.Exists,this);
+                a.neighbourStench(State.Impossible,this);
             }
             return 0;
         }
     }
 
+
+
+
     public boolean isSafe(){
-        return !(pitPossible || wumpusPossible);
+//        return !(pitPossible || wumpusPossible);
+        return pit == State.Impossible && wumpus == State.Impossible;
     }
     public boolean haveWumpus(){
-        return sureOfWumpus && wumpusPossible;
+//        return sureOfWumpus && wumpusPossible;
+        return wumpus == State.Exists;
     }
     public boolean hasPit(){
-        return sureOfPit && pitPossible;
+//        return sureOfPit && pitPossible;
+        return pit == State.Exists;
     }
     public boolean isBreezy(){
         return block.isBreezy();
@@ -91,6 +123,10 @@ public class AgentBlock{
     public boolean isUnvisited(){
         return !visited;
     }
+
+
+
+
 
     public int i(){return i;}
     public int j(){return j;}
@@ -113,6 +149,125 @@ public class AgentBlock{
         }
 
         return s;
+    }
+
+
+
+
+    public int getBreeze() {
+        return breeze;
+    }
+    public int getStench() {
+        return stench;
+    }
+    public int getPit() {
+        return pit;
+    }
+    public int getWumpus() {
+        return wumpus;
+    }
+
+
+
+    public boolean onlyOneNeighbourPitPossible(){
+        int pp = 0;
+        for(AgentBlock n:neighbours){
+            if(n.getPit()==State.Possible)
+                pp++;
+        }
+        return pp==1;
+    }
+    public void confirmNeighbourPit(){
+        for (AgentBlock n:neighbours){
+            if(n.getPit()==State.Possible){
+                n.pit = State.Exists;
+            }
+        }
+    }
+    public boolean onlyOneNeighbourWumpusPossible(){
+        int pp = 0;
+        for(AgentBlock n:neighbours){
+            if(n.getWumpus()==State.Possible)
+                pp++;
+        }
+        return pp==1;
+    }
+    public void confirmNeighbourWumpus(){
+        for (AgentBlock n:neighbours){
+            if(n.getWumpus()==State.Possible){
+                n.wumpus = State.Exists;
+            }
+        }
+    }
+
+
+    public void neighbourBreeze(int state, AgentBlock n){
+        switch (state){
+            case State.Impossible -> {
+                pit = State.Impossible;
+                for (AgentBlock neighbour: neighbours) {
+                    if(!neighbour.equals(n) && neighbour.isUnvisited())
+                        neighbour.neighbourPit(pit, this);
+                }
+            }
+            case State.Exists -> {
+                pit = State.Possible;
+                for (AgentBlock neighbour: neighbours)
+                    if(!neighbour.equals(n))
+                        neighbour.neighbourPit(pit, this);
+            }
+        }
+    }
+
+    public void neighbourPit(int state, AgentBlock n) {
+        switch (state){
+            case State.Exists -> {
+                breeze = State.Exists;
+                for (AgentBlock neighbour: neighbours)
+                    if(!neighbour.equals(n))
+                        neighbour.neighbourBreeze(breeze, this);
+            }
+            case State.Impossible -> {
+                if(isBreezy() && onlyOneNeighbourPitPossible())
+                    confirmNeighbourPit();
+            }
+            case State.Possible ->
+                breeze = State.Possible;
+        }
+    }
+
+    public void neighbourStench(int state, AgentBlock n){
+        switch (state){
+            case State.Impossible -> {
+                wumpus = State.Impossible;
+                for (AgentBlock neighbour: neighbours)
+                    if(!neighbour.equals(n))
+                        neighbour.neighbourWumpus(wumpus,this);
+            }
+            case State.Exists -> {
+                wumpus = State.Possible;
+                for (AgentBlock neighbour: neighbours)
+                    if(!neighbour.equals(n))
+                        neighbour.neighbourWumpus(wumpus,this);
+            }
+        }
+    }
+
+    public void neighbourWumpus(int state, AgentBlock n){
+        switch (state){
+            case State.Exists -> {
+                stench = State.Exists;
+                for (AgentBlock neighbour: neighbours)
+                    if(!neighbour.equals(n))
+                        neighbour.neighbourStench(stench,this);
+            }
+            case State.Impossible -> {
+                if(isStenchy() && onlyOneNeighbourWumpusPossible())
+                    confirmNeighbourWumpus();
+            }
+            case State.Possible ->
+                    stench = State.Possible;
+        }
     }
 
 }
