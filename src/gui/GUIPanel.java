@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class GUIPanel extends JPanel implements ActionListener {
+public class GUIPanel extends JPanel /*implements ActionListener*/ {
     final int PANEL_HEIGHT = 650;
     final int PANEL_WIDTH  = 650;
 
@@ -34,100 +34,52 @@ public class GUIPanel extends JPanel implements ActionListener {
     private final Image w = new ImageIcon("arts/allPossibleCombination/19.w.png").getImage();
 
 //    BlockPanel[][] blocks;
-    AgentBlock[][] agentBlocks;
+    private AgentBlock[][] agentBlocks;
+    private Timer timer;
 
     public GUIPanel(){
         setPreferredSize(new Dimension(PANEL_WIDTH,PANEL_HEIGHT));
         agentBlocks = Board.getInstance().getBlocks();
+//        timer = new Timer(200, this);
     }
 
 
     public void paint(Graphics g){
+        super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
+
+        //Draw
+        for (int i=0;i<10;i++){
+            for(int j=0; j<10;j++){
+                String state = agentBlocks[i][j].stateForImage();
+                switch (state) {
+                    case "x" -> g2d.drawImage(x, j * 65, i * 65, 65, 65, null);
+                    case "v" -> g2d.drawImage(v, j * 65, i * 65, 65, 65, null);
+                    case "vg" -> g2d.drawImage(vg, j * 65, i * 65, 65, 65, null);
+                    case "vb" -> g2d.drawImage(vb, j * 65, i * 65, 65, 65, null);
+                    case "vs" -> g2d.drawImage(vs, j * 65, i * 65, 65, 65, null);
+                    case "vgb" -> g2d.drawImage(vgb, j * 65, i * 65, 65, 65, null);
+                    case "vgs" -> g2d.drawImage(vgs, j * 65, i * 65, 65, 65, null);
+                    case "vgbs" -> g2d.drawImage(vgbs, j * 65, i * 65, 65, 65, null);
+                    case "av" -> g2d.drawImage(av, j * 65, i * 65, 65, 65, null);
+                    case "avg" -> g2d.drawImage(avg, j * 65, i * 65, 65, 65, null);
+                    case "avb" -> g2d.drawImage(avb, j * 65, i * 65, 65, 65, null);
+                    case "avs" -> g2d.drawImage(avs, j * 65, i * 65, 65, 65, null);
+                    case "avgb" -> g2d.drawImage(avgb, j * 65, i * 65, 65, 65, null);
+                    case "avgs" -> g2d.drawImage(avgs, j * 65, i * 65, 65, 65, null);
+                    case "avgbs" -> g2d.drawImage(avgbs, j * 65, i * 65, 65, 65, null);
+                    case "b" -> g2d.drawImage(b, j * 65, i * 65, 65, 65, null);
+                    case "s" -> g2d.drawImage(s, j * 65, i * 65, 65, 65, null);
+                    case "bs" -> g2d.drawImage(bs, j * 65, i * 65, 65, 65, null);
+                    case "p" -> g2d.drawImage(p, j * 65, i * 65, 65, 65, null);
+                    case "w" -> g2d.drawImage(w, j * 65, i * 65, 65, 65, null);
+                }
+            }
+        }
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-    }
-}
-   //    private final JLayeredPane frame;
-//    private final JLayeredPane[][] layers = new JLayeredPane[10][10];
-//    private AgentBlock[][] agentBlocks;
-
-//    private final ImageIcon agent = new ImageIcon("pixelArt\\pictures\\agent.png");
-//    private final ImageIcon breeze = new ImageIcon("pixelArt\\pictures\\Breeze.png");
-//    private final ImageIcon cave = new ImageIcon("pixelArt\\pictures\\EmptyCave.png");
-//    private final ImageIcon gold = new ImageIcon("pixelArt\\pictures\\gold.png");
-//    private final ImageIcon pit = new ImageIcon("pixelArt\\pictures\\pit.png");
-//    private final ImageIcon stench = new ImageIcon("pixelArt\\pictures\\Stench.png");
-//    private final ImageIcon torch = new ImageIcon("pixelArt\\pictures\\torches.png");
-//    private final ImageIcon wumpus = new ImageIcon("pixelArt\\pictures\\wumpus.png");
-
-
-
-//    private GUI_Frame(){
-//        agentBlocks = Board.getInstance().getBlocks();
-//        frame = new JLayeredPane();
-//        frame.setBounds(0,0,670,690);
-//        for (int i=0;i<10;i++){
-//            for (int j=0;j<10;j++){
-//                layers[i][j] = new JLayeredPane();
-//                layers[i][j].setBounds(j*65,i*65,65,65);
-//
-//                if(
-//                        i==Board.getInstance().getCurrentBlock().i() &&
-//                        j==Board.getInstance().getCurrentBlock().j()
-//                ){
-//                    JLabel l = new JLabel(agent);
-//                    l.setBounds(0,0,65,65);
-//                    layers[i][j].add(l);
-//                }
-//                if(!agentBlocks[i][j].isUnvisited()){
-//                    JLabel l = new JLabel(torch);
-//                    l.setBounds(0,0,65,65);
-//                    layers[i][j].add(l);
-//                }
-//                if(agentBlocks[i][j].isBreezy()){
-//                    JLabel l = new JLabel(breeze);
-//                    l.setBounds(0,0,65,65);
-//                    layers[i][j].add(l);
-//                }
-//
-//                if(agentBlocks[i][j].isStenchy()){
-//                    JLabel l = new JLabel(stench);
-//                    l.setBounds(0,0,65,65);
-//                    layers[i][j].add(l);
-//                }
-//                if(agentBlocks[i][j].haveWumpus()){
-//                    JLabel l = new JLabel(wumpus);
-//                    l.setBounds(0,0,65,65);
-//                    layers[i][j].add(l);
-//                }
-//                if(agentBlocks[i][j].hasPit()){
-//                    JLabel l = new JLabel(pit);
-//                    l.setBounds(0,0,65,65);
-//                    layers[i][j].add(l);
-//                }
-//
-//                JLabel l = new JLabel(cave);
-//                l.setBounds(0,0,65,65);
-//                layers[i][j].add(l);
-//
-//                frame.add(layers[i][j]);
-//            }
-//        }
-//
-//
-//
-//
-//        JFrame jframe = new JFrame("Wumpus World");
-//        jframe.add(frame);
-//        jframe.setSize(670,690);
-//        jframe.setLayout(null);
-//        jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        jframe.setVisible(true);
-
-
+//    @Override
+//    public void actionPerformed(ActionEvent e) {
+//        repaint();
 //    }
-
+}

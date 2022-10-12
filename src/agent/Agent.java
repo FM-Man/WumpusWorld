@@ -1,6 +1,7 @@
 package agent;
 
 import common.Instruction;
+import gui.GUIFrame;
 import gui.GUI_Frame;
 import world.AgentBlock;
 import world.Board;
@@ -11,13 +12,22 @@ public class Agent {
     public Agent(){
         int steps = 0;
 //        GUI_Frame.getInstance();
+        Board board = Board.getInstance();
+        board.updateNeighbourListForEachBlock();
+
+        GUIFrame gf = new GUIFrame();
         while (true){
 
-//            GUI_Frame.getInstance().updateFrame();
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            gf.update();
+
 
             steps++;
-            Board board = Board.getInstance();
-            board.updateNeighbourListForEachBlock();
 
             AgentBlock cb = board.getCurrentBlock();
             System.out.print("STEP-"+ steps +": ");
@@ -84,6 +94,10 @@ public class Agent {
                 }
                 
             }
+
+
+
+            gf.update();
 
         }
     }
