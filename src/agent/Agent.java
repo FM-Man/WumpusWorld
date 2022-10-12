@@ -16,10 +16,10 @@ public class Agent {
 //            GUI_Frame.getInstance().updateFrame();
 
             steps++;
-            Board b = Board.getInstance();
-            b.updateNeighbourListForEachBlock();
+            Board board = Board.getInstance();
+            board.updateNeighbourListForEachBlock();
 
-            AgentBlock cb = b.getCurrentBlock();
+            AgentBlock cb = board.getCurrentBlock();
             System.out.print("STEP-"+ steps +": ");
             int result = cb.visit();
 
@@ -33,10 +33,10 @@ public class Agent {
             else {
                 if(cb.isBreezy())
                     System.out.println("You feel a breeze");
-                else if(cb.isStenchy())
+                if(cb.isStenchy())
                     System.out.println("You smell stench");
 
-                ArrayList<AgentBlock> neighbours = b.getNeighbours(cb.i(),cb.j());
+                ArrayList<AgentBlock> neighbours = board.getNeighbours(cb.i(),cb.j());
 //                Collections.sort(neighbours);
 
                 for (AgentBlock nb: neighbours){
@@ -45,12 +45,15 @@ public class Agent {
                         break;
                     }
                 }
+
+                GUI_Frame.getInstance().updateFrame();
+
                 boolean nonVisitedSafeFound = false;
                 for (AgentBlock nb:neighbours){
                     if(nb.isSafe() && nb.isUnvisited()){
                         Instruction instruction = getInstruction(cb,nb);
                         System.out.println("Move "+instruction.name());
-                        Board.getInstance().setCurrentBlock(instruction);
+                        board.setCurrentBlock(instruction);
                         nonVisitedSafeFound = true;
                         break;
                     }
@@ -61,7 +64,7 @@ public class Agent {
                         if(nb.isSafe()){
                             Instruction instruction = getInstruction(cb,nb);
                             System.out.println("Move "+instruction.name());
-                            Board.getInstance().setCurrentBlock(instruction);
+                            board.setCurrentBlock(instruction);
                             safeFound = true;
                             break;
                         }
@@ -82,7 +85,6 @@ public class Agent {
                 
             }
 
-            GUI_Frame.getInstance().updateFrame();
         }
     }
 

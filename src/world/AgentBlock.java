@@ -96,7 +96,7 @@ public class AgentBlock{
                 else a.neighbourBreeze(State.Impossible,this);
                 if(isStenchy())
                     a.neighbourStench(State.Exists,this);
-                a.neighbourStench(State.Impossible,this);
+                else a.neighbourStench(State.Impossible,this);
             }
             return 0;
         }
@@ -214,10 +214,12 @@ public class AgentBlock{
                 }
             }
             case State.Exists -> {
-                pit = State.Possible;
-                for (AgentBlock neighbour: neighbours)
-                    if(!neighbour.equals(n))
-                        neighbour.neighbourPit(pit, this);
+                if(!visited && pit != State.Exists && pit != State.Impossible) {
+                    pit = State.Possible;
+                    for (AgentBlock neighbour : neighbours)
+                        if (!neighbour.equals(n))
+                            neighbour.neighbourPit(pit, this);
+                }
             }
         }
     }
@@ -248,10 +250,12 @@ public class AgentBlock{
                         neighbour.neighbourWumpus(wumpus,this);
             }
             case State.Exists -> {
-                wumpus = State.Possible;
-                for (AgentBlock neighbour: neighbours)
-                    if(!neighbour.equals(n))
-                        neighbour.neighbourWumpus(wumpus,this);
+                if(!visited && wumpus != State.Exists && wumpus != State.Impossible) {
+                    wumpus = State.Possible;
+                    for (AgentBlock neighbour : neighbours)
+                        if (!neighbour.equals(n))
+                            neighbour.neighbourWumpus(wumpus, this);
+                }
             }
         }
     }
