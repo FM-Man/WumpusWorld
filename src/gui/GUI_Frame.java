@@ -28,7 +28,7 @@ public class GUI_Frame {
                     System.out.print("a");
                 }
                 else System.out.print(" ");
-                System.out.print(agentBlocks[i][j].state());
+                System.out.print(agentBlocks[i][j].stateForPrinting());
                 System.out.print("|");
 
             }
@@ -55,7 +55,7 @@ public class GUI_Frame {
                 }
                 else System.out.print(" ");
 
-                System.out.print(agentBlocks[i][j].state());
+                System.out.print(agentBlocks[i][j].stateForPrinting());
                 System.out.print("|");
 
             }
