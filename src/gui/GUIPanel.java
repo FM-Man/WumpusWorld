@@ -5,8 +5,6 @@ import world.Board;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class GUIPanel extends JPanel /*implements ActionListener*/ {
     final int PANEL_HEIGHT = 650;
@@ -33,14 +31,12 @@ public class GUIPanel extends JPanel /*implements ActionListener*/ {
     private final Image p = new ImageIcon("arts/allPossibleCombination/18.p.png").getImage();
     private final Image w = new ImageIcon("arts/allPossibleCombination/19.w.png").getImage();
 
-//    BlockPanel[][] blocks;
-    private AgentBlock[][] agentBlocks;
-    private Timer timer;
+    private final AgentBlock[][] agentBlocks;
+
 
     public GUIPanel(){
         setPreferredSize(new Dimension(PANEL_WIDTH,PANEL_HEIGHT));
         agentBlocks = Board.getInstance().getBlocks();
-//        timer = new Timer(200, this);
     }
 
 
@@ -77,9 +73,5 @@ public class GUIPanel extends JPanel /*implements ActionListener*/ {
             }
         }
     }
-
-//    @Override
-//    public void actionPerformed(ActionEvent e) {
-//        repaint();
-//    }
+    
 }

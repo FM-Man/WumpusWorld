@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class Agent {
     public Agent(){
         int steps = 0;
-//        GUI_Frame.getInstance();
+
         Board board = Board.getInstance();
         board.updateNeighbourListForEachBlock();
 
@@ -47,7 +47,6 @@ public class Agent {
                     System.out.println("You smell stench");
 
                 ArrayList<AgentBlock> neighbours = board.getNeighbours(cb.i(),cb.j());
-//                Collections.sort(neighbours);
 
                 for (AgentBlock nb: neighbours){
                     if (nb.haveWumpus()){
