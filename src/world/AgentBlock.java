@@ -10,10 +10,10 @@ public class AgentBlock{
     private ArrayList<AgentBlock> neighbours;
 
     private boolean visited;
-    private boolean pitPossible;
-    private boolean wumpusPossible;
-    private boolean sureOfPit;
-    private boolean sureOfWumpus;
+//    private boolean pitPossible;
+//    private boolean wumpusPossible;
+//    private boolean sureOfPit;
+//    private boolean sureOfWumpus;
 
     private int breeze = State.NotKnown;
     private int stench = State.NotKnown;
@@ -24,7 +24,7 @@ public class AgentBlock{
         this.i = i;
         this.j = j;
         this.block = block;
-        visited = pitPossible = wumpusPossible = sureOfPit = sureOfWumpus = false;
+        visited = /*pitPossible = wumpusPossible = sureOfPit = sureOfWumpus =*/ false;
 
 //        neighbours = Board.getInstance().getNeighbours(this.i,this.j);
     }
@@ -33,45 +33,45 @@ public class AgentBlock{
         neighbours = Board.getInstance().getNeighbours(this.i,this.j);
     }
 
-    public void neighbourUpdate(boolean hasBreeze, boolean hasStench){
-        pitPossible = ((visited || sureOfPit) && pitPossible) || (!visited && !sureOfPit && hasBreeze);
-        wumpusPossible = ((visited || sureOfWumpus) && wumpusPossible) || (!(visited || sureOfWumpus) && hasStench);
-
-        sureOfPit = !hasBreeze || sureOfPit;
-        sureOfWumpus = !hasStench || sureOfWumpus;
-
-
-
-//        if (hasBreeze) neighbourBreeze(State.Exists);
-//        else neighbourBreeze(State.Impossible);
-//        if(hasStench) neighbourStench(State.Exists);
-//        else neighbourStench(State.Impossible);
-
-
-
-        if(sureOfPit && pitPossible) pit = State.Exists;
-        else if(sureOfPit) pit = State.Impossible;
-        else if(pitPossible) pit = State.Possible;
-        else pit = State.NotKnown;
-
-        if(sureOfWumpus && wumpusPossible) wumpus = State.Exists;
-        else if(sureOfWumpus) wumpus = State.Impossible;
-        else if(wumpusPossible) wumpus = State.Possible;
-        else wumpus = State.NotKnown;
-    }
+//    public void neighbourUpdate(boolean hasBreeze, boolean hasStench){
+//        pitPossible = ((visited || sureOfPit) && pitPossible) || (!visited && !sureOfPit && hasBreeze);
+//        wumpusPossible = ((visited || sureOfWumpus) && wumpusPossible) || (!(visited || sureOfWumpus) && hasStench);
+//
+//        sureOfPit = !hasBreeze || sureOfPit;
+//        sureOfWumpus = !hasStench || sureOfWumpus;
+//
+//
+//
+////        if (hasBreeze) neighbourBreeze(State.Exists);
+////        else neighbourBreeze(State.Impossible);
+////        if(hasStench) neighbourStench(State.Exists);
+////        else neighbourStench(State.Impossible);
+//
+//
+//
+//        if(sureOfPit && pitPossible) pit = State.Exists;
+//        else if(sureOfPit) pit = State.Impossible;
+//        else if(pitPossible) pit = State.Possible;
+//        else pit = State.NotKnown;
+//
+//        if(sureOfWumpus && wumpusPossible) wumpus = State.Exists;
+//        else if(sureOfWumpus) wumpus = State.Impossible;
+//        else if(wumpusPossible) wumpus = State.Possible;
+//        else wumpus = State.NotKnown;
+//    }
 
     public int visit(){
         visited = true;
-        sureOfWumpus = true;
-        sureOfPit = true;
-        pitPossible = block.isWithPit();
-        wumpusPossible = block.isWithWumpus();
+//        sureOfWumpus = true;
+//        sureOfPit = true;
+//        pitPossible = block.isWithPit();
+//        wumpusPossible = block.isWithWumpus();
 
 
 
-        if(pitPossible) pit=State.Exists;
+        if(block.isWithPit()) pit=State.Exists;
         else pit=State.Impossible;
-        if(wumpusPossible) wumpus=State.Exists;
+        if(block.isWithWumpus()) wumpus=State.Exists;
         else wumpus = State.Impossible;
 
         if(isBreezy()) breeze=State.Exists;
@@ -86,7 +86,8 @@ public class AgentBlock{
         if(block.isWithGold())
             if(Board.getInstance().goldFound()==1)
                 return 1;
-        if(pitPossible || wumpusPossible)
+//        if(pitPossible || wumpusPossible)
+        if(pit == State.Exists || wumpus == State.Exists)
             return -1;
         else {
             for (AgentBlock a:neighbours){
@@ -261,13 +262,13 @@ public class AgentBlock{
     }
 
 
-
-    public int getBreeze() {
-        return breeze;
-    }
-    public int getStench() {
-        return stench;
-    }
+//
+//    public int getBreeze() {
+//        return breeze;
+//    }
+//    public int getStench() {
+//        return stench;
+//    }
     public int getPit() {
         return pit;
     }

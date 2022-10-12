@@ -3,18 +3,18 @@ package gui;
 import world.AgentBlock;
 import world.Board;
 
-public class GUI_Frame {
+public class PrintFrame {
     private AgentBlock[][] agentBlocks;
 
-    private static GUI_Frame instance=null;
-    public static GUI_Frame getInstance(){
+    private static PrintFrame instance=null;
+    public static PrintFrame getInstance(){
         if(instance==null)
-            instance = new GUI_Frame();
+            instance = new PrintFrame();
         return instance;
     }
 
 
-    private GUI_Frame(){
+    private PrintFrame(){
         System.out.println("===============================================================================================");
 
         agentBlocks = Board.getInstance().getBlocks();

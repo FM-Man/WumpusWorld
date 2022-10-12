@@ -2,7 +2,7 @@ package agent;
 
 import common.Instruction;
 import gui.GUIFrame;
-import gui.GUI_Frame;
+import gui.PrintFrame;
 import world.AgentBlock;
 import world.Board;
 
@@ -56,7 +56,7 @@ public class Agent {
                     }
                 }
 
-                GUI_Frame.getInstance().updateFrame();
+                PrintFrame.getInstance().updateFrame();
 
                 boolean nonVisitedSafeFound = false;
                 for (AgentBlock nb:neighbours){
