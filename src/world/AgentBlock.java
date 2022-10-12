@@ -7,7 +7,7 @@ public class AgentBlock{
     private final int j;
     private final InformationBlock block;
 
-    private final ArrayList<AgentBlock> neighbours;
+    private ArrayList<AgentBlock> neighbours;
 
     private boolean visited;
     private boolean pitPossible;
@@ -26,9 +26,12 @@ public class AgentBlock{
         this.block = block;
         visited = pitPossible = wumpusPossible = sureOfPit = sureOfWumpus = false;
 
-        neighbours = Board.getInstance().getNeighbours(this.i,this.j);
+//        neighbours = Board.getInstance().getNeighbours(this.i,this.j);
     }
 
+    public void setNeighbours(){
+        neighbours = Board.getInstance().getNeighbours(this.i,this.j);
+    }
 
     public void neighbourUpdate(boolean hasBreeze, boolean hasStench){
         pitPossible = ((visited || sureOfPit) && pitPossible) || (!visited && !sureOfPit && hasBreeze);

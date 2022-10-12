@@ -16,7 +16,10 @@ public class Agent {
 //            GUI_Frame.getInstance().updateFrame();
 
             steps++;
-            AgentBlock cb = Board.getInstance().getCurrentBlock();
+            Board b = Board.getInstance();
+            b.updateNeighbourListForEachBlock();
+
+            AgentBlock cb = b.getCurrentBlock();
             System.out.print("STEP-"+ steps +": ");
             int result = cb.visit();
 
@@ -33,7 +36,7 @@ public class Agent {
                 else if(cb.isStenchy())
                     System.out.println("You smell stench");
 
-                ArrayList<AgentBlock> neighbours = Board.getInstance().getNeighbours(cb.i(),cb.j());
+                ArrayList<AgentBlock> neighbours = b.getNeighbours(cb.i(),cb.j());
 //                Collections.sort(neighbours);
 
                 for (AgentBlock nb: neighbours){

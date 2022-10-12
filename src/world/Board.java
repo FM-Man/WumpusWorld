@@ -14,6 +14,13 @@ public class Board {
     private int numberOfGold;
     private int goldFound;
 
+    private final int AGENT     = 0;
+    private final int WUMPUS    = 1;
+    private final int SAFE      = 2;
+    private final int GOLD      = 3;
+    private final int PIT       = 4;
+
+
     private static Board instance = null;
     private Board() {
         blocks = new AgentBlock[dimension][dimension];
@@ -31,17 +38,23 @@ public class Board {
             String[] line = scanner.nextLine().split(",",0);
             for (int j=0; j<line.length;j++){
                 switch (line[j]) {
-                    case "a", "A" -> informationArray[i][j] = 0;
-                    case "w", "W" -> informationArray[i][j] = 1;
-                    case "s", "S" -> informationArray[i][j] = 2;
-                    case "g", "G" -> informationArray[i][j] = 3;
-                    default -> informationArray[i][j] = 4;
+                    case "a", "A"   -> informationArray[i][j] = AGENT;
+                    case "w", "W"   -> informationArray[i][j] = WUMPUS;
+                    case "s", "S"   -> informationArray[i][j] = SAFE;
+                    case "g", "G"   -> informationArray[i][j] = GOLD;
+                    default         -> informationArray[i][j] = PIT;
                 }
             }
         }
 
-        for (int i=0; i<dimension;i++){
-            for (int j=0;j<dimension;j++){
+
+        int i =0;
+        int j=0;
+        while (i<dimension)
+        {
+            j =0;
+            while (j<dimension)
+            {
                 InformationBlock ib;
                 AgentBlock ab;
                 boolean isPit=false;
@@ -50,49 +63,51 @@ public class Board {
                 boolean isStenchy=false;
                 boolean isGlittery=false;
 
-                if(informationArray[i][j]==0){
+                if(informationArray[i][j]==AGENT){
                     ib = new InformationBlock(isStenchy,isWumpus,isBreeze,isPit,isGlittery);
                     ab = new AgentBlock(i,j,ib);
                     currentBlock =ab;
                 }
                 else {
                     if(i<dimension-1) {
-                        if (informationArray[i + 1][j] == 1)
+                        if (informationArray[i + 1][j] == WUMPUS)
                             isStenchy = true;
-                        else if(informationArray[i+1][j]==4)
+                        else if(informationArray[i+1][j]==PIT)
                             isBreeze = true;
                     }
                     if(i>0) {
-                        if (informationArray[i - 1][j] == 1)
+                        if (informationArray[i - 1][j] == WUMPUS)
                             isStenchy = true;
-                        else if(informationArray[i-1][j]==4)
+                        else if(informationArray[i-1][j]==PIT)
                             isBreeze = true;
                     }
                     if(j<dimension-1){
-                        if (informationArray[i][j+1] == 1)
+                        if (informationArray[i][j+1] == WUMPUS)
                             isStenchy = true;
-                        else if(informationArray[i][j+1]==4)
+                        else if(informationArray[i][j+1]==PIT)
                             isBreeze = true;
                     }
                     if(j>0){
-                        if (informationArray[i][j-1] == 1)
+                        if (informationArray[i][j-1] == WUMPUS)
                             isStenchy = true;
-                        else if(informationArray[i][j-1]==4)
+                        else if(informationArray[i][j-1]==PIT)
                             isBreeze = true;
                     }
 
-                    if(informationArray[i][j]==1) isWumpus = true;
-                    else if(informationArray[i][j]==3) {
+                    if(informationArray[i][j]==WUMPUS) isWumpus = true;
+                    else if(informationArray[i][j]==GOLD) {
                         isGlittery = true;
                         numberOfGold++;
                     }
-                    else if(informationArray[i][j]==4) isPit = true;
+                    else if(informationArray[i][j]==PIT) isPit = true;
 
                     ib = new InformationBlock(isStenchy,isWumpus,isBreeze,isPit,isGlittery);
                     ab = new AgentBlock(i,j,ib);
                 }
                 blocks[i][j] = ab;
+                j++;
             }
+            i++;
         }
 
 
@@ -104,6 +119,15 @@ public class Board {
         }
         return instance;
     }
+
+    public void updateNeighbourListForEachBlock(){
+        for (int i=0;i<dimension;i++){
+            for (int j=0;j<dimension;j++){
+                blocks[i][j].setNeighbours();
+            }
+        }
+    }
+
 
     public ArrayList<AgentBlock> getNeighbours(int i, int j){
         ArrayList<AgentBlock> a = new ArrayList<>();
