@@ -8,7 +8,7 @@ import java.awt.*;
 
 public class GUIPanel extends JPanel /*implements ActionListener*/ {
     final int PANEL_HEIGHT = 650;
-    final int PANEL_WIDTH  = 650;
+    final int PANEL_WIDTH  = 950;
 
     private final Image x = new ImageIcon("arts/allPossibleCombination/0.x.png").getImage();
     private final Image v = new ImageIcon("arts/allPossibleCombination/1.v.png").getImage();
@@ -44,7 +44,6 @@ public class GUIPanel extends JPanel /*implements ActionListener*/ {
         super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
 
-        //Draw
         for (int i=0;i<10;i++){
             for(int j=0; j<10;j++){
                 String state = agentBlocks[i][j].stateForImage();
@@ -71,6 +70,33 @@ public class GUIPanel extends JPanel /*implements ActionListener*/ {
                     case "w" -> g2d.drawImage(w, j * 65, i * 65, 65, 65, null);
                 }
             }
+        }
+//        g2d.drawString(GUIFrame.story,670,100);
+        g2d.setStroke(new BasicStroke(3));
+        g2d.setPaint(Color.RED);
+        int y=100;
+        if(!GUIFrame.move.equals("")) {
+            g2d.drawString(GUIFrame.move,670,y);
+            y+=50;
+        }
+        if(!GUIFrame.gold.equals("")) {
+            g2d.drawString(GUIFrame.gold,670,y);
+            y+=50;
+        }
+        if(!GUIFrame.breeze.equals("")) {
+            g2d.drawString(GUIFrame.breeze,670,y);
+            y+=50;
+        }
+        if(!GUIFrame.stench.equals("")) {
+            g2d.drawString(GUIFrame.stench,670,y);
+            y+=50;
+        }
+        if(!GUIFrame.result.equals("")) {
+            g2d.drawString(GUIFrame.result,670,y);
+            y+=50;
+        }
+        if(!GUIFrame.nextMove.equals("")) {
+            g2d.drawString(GUIFrame.nextMove,670,y);
         }
     }
     

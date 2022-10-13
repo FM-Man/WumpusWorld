@@ -1,6 +1,7 @@
 package world;
 
 import common.Instruction;
+import gui.GUIFrame;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -156,11 +157,16 @@ public class Board {
     }
     public int goldFound(){
         goldFound++;
+        GUIFrame.addStory("Gold Found.");
         System.out.println("Gold Found. "+ (numberOfGold-goldFound)+" gold left");
         if(goldFound>=numberOfGold) return 1;
         else return 0;
     }
     public AgentBlock[][] getBlocks(){
         return blocks;
+    }
+
+    public int goldRemaining(){
+        return numberOfGold-goldFound;
     }
 }

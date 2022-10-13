@@ -1,5 +1,7 @@
 package world;
 
+import gui.GUIFrame;
+
 import java.util.ArrayList;
 
 public class AgentBlock implements Comparable<AgentBlock>{
@@ -47,6 +49,7 @@ public class AgentBlock implements Comparable<AgentBlock>{
 
 
         System.out.println(i+","+j+" visited.");
+        GUIFrame.move+=i+","+j+" visited";
         if(block.isWithGold())
             if(Board.getInstance().goldFound()==1)
                 return 1;
@@ -267,6 +270,11 @@ public class AgentBlock implements Comparable<AgentBlock>{
                     stench = State.Possible;
         }
     }
+
+//
+//    public int getDegreeOfUnsafety(){
+//
+//    }
 
 
 
