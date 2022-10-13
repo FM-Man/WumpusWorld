@@ -23,9 +23,7 @@ public class AgentBlock implements Comparable<AgentBlock>{
         this.i = i;
         this.j = j;
         this.block = block;
-        visited = /*pitPossible = wumpusPossible = sureOfPit = sureOfWumpus =*/ false;
-
-//        neighbours = Board.getInstance().getNeighbours(this.i,this.j);
+        visited =  false;
     }
 
     public void setNeighbours(){
@@ -79,16 +77,10 @@ public class AgentBlock implements Comparable<AgentBlock>{
 
 
     public boolean isSafe(){
-//        return !(pitPossible || wumpusPossible);
         return pit == State.Impossible && wumpus == State.Impossible;
     }
     public boolean haveWumpus(){
-//        return sureOfWumpus && wumpusPossible;
         return wumpus == State.Exists;
-    }
-    public boolean hasPit(){
-
-        return pit == State.Exists;
     }
     public boolean isBreezy(){
         return block.isBreezy();
@@ -299,13 +291,6 @@ public class AgentBlock implements Comparable<AgentBlock>{
         return degree/neighbours.size();
     }
 
-    public boolean atLeastOneNeighbourIsVisited(){
-        boolean flag = false;
-        for (AgentBlock nb:neighbours){
-            if(nb.visited) flag = true;
-        }
-        return flag;
-    }
 
 
 

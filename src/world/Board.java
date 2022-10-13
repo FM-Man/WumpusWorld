@@ -10,24 +10,21 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Board {
+
+    private final String inputFilePath = "input2.txt";
+
     private final int dimension=10;
     private final AgentBlock[][] blocks;
     private AgentBlock currentBlock;
     private int numberOfGold;
     private int goldFound;
 
-    private final int AGENT     = 0;
-    private final int WUMPUS    = 1;
-    private final int SAFE      = 2;
-    private final int GOLD      = 3;
-    private final int PIT       = 4;
-
 
     private static Board instance = null;
     private Board() {
         blocks = new AgentBlock[dimension][dimension];
 
-        File inputFile = new File("input.txt");
+        File inputFile = new File(inputFilePath);
         Scanner scanner;
         try {
              scanner= new Scanner(inputFile);
@@ -36,9 +33,14 @@ public class Board {
         }
 
         int[][] informationArray = new int[dimension][dimension];
-        for (int i=0; scanner.hasNextLine(); i++){
+        int AGENT = 0;
+        int WUMPUS = 1;
+        int GOLD = 3;
+        int PIT = 4;
+        for (int i = 0; scanner.hasNextLine(); i++){
             String[] line = scanner.nextLine().split(",",0);
             for (int j=0; j<line.length;j++){
+                int SAFE = 2;
                 switch (line[j]) {
                     case "a", "A"   -> informationArray[i][j] = AGENT;
                     case "w", "W"   -> informationArray[i][j] = WUMPUS;
@@ -51,7 +53,7 @@ public class Board {
 
 
         int i =0;
-        int j=0;
+        int j;
         while (i<dimension)
         {
             j =0;
@@ -65,8 +67,8 @@ public class Board {
                 boolean isStenchy=false;
                 boolean isGlittery=false;
 
-                if(informationArray[i][j]==AGENT){
-                    ib = new InformationBlock(isStenchy,isWumpus,isBreeze,isPit,isGlittery);
+                if(informationArray[i][j]== AGENT){
+                    ib = new InformationBlock(false, false, false, false, false);
                     ab = new AgentBlock(i,j,ib);
                     currentBlock =ab;
                 }
@@ -74,34 +76,34 @@ public class Board {
                     if(i<dimension-1) {
                         if (informationArray[i + 1][j] == WUMPUS)
                             isStenchy = true;
-                        else if(informationArray[i+1][j]==PIT)
+                        else if(informationArray[i+1][j]== PIT)
                             isBreeze = true;
                     }
                     if(i>0) {
                         if (informationArray[i - 1][j] == WUMPUS)
                             isStenchy = true;
-                        else if(informationArray[i-1][j]==PIT)
+                        else if(informationArray[i-1][j]== PIT)
                             isBreeze = true;
                     }
                     if(j<dimension-1){
                         if (informationArray[i][j+1] == WUMPUS)
                             isStenchy = true;
-                        else if(informationArray[i][j+1]==PIT)
+                        else if(informationArray[i][j+1]== PIT)
                             isBreeze = true;
                     }
                     if(j>0){
                         if (informationArray[i][j-1] == WUMPUS)
                             isStenchy = true;
-                        else if(informationArray[i][j-1]==PIT)
+                        else if(informationArray[i][j-1]== PIT)
                             isBreeze = true;
                     }
 
-                    if(informationArray[i][j]==WUMPUS) isWumpus = true;
-                    else if(informationArray[i][j]==GOLD) {
+                    if(informationArray[i][j]== WUMPUS) isWumpus = true;
+                    else if(informationArray[i][j]== GOLD) {
                         isGlittery = true;
                         numberOfGold++;
                     }
-                    else if(informationArray[i][j]==PIT) isPit = true;
+                    else if(informationArray[i][j]== PIT) isPit = true;
 
                     ib = new InformationBlock(isStenchy,isWumpus,isBreeze,isPit,isGlittery);
                     ab = new AgentBlock(i,j,ib);
@@ -172,25 +174,12 @@ public class Board {
     }
 
     public ArrayList<AgentBlock> getUnsafes(){
-//        ArrayList<AgentBlock> al = new ArrayList<>();
-//        for (int i=0; i<dimension;i++){
-//            for (int j=0;j<dimension;j++){
-//                if(blocks[i][j].getPit() == State.Possible || blocks[i][j].getWumpus() == State.Possible){
-//                    al.add(blocks[i][j]);
-//                }
-//            }
-//        }
-//        Collections.reverse(al);
-//        return al;
-
         PQ pq = new PQ();
         ArrayList<AgentBlock> al = new ArrayList<>();
         for (int i=0; i<dimension;i++){
             for (int j=0;j<dimension;j++){
                 pq.add(blocks[i][j], blocks[i][j].getDegreeOfUnsafety());
-//                if(blocks[i][j].isSafe() && blocks[i][j].isUnvisited()){
-//                    al.add(blocks[i][j]);
-//                }
+
             }
         }
         while (pq.size()!=0) {
@@ -199,7 +188,6 @@ public class Board {
                 al.add(ab);
             }
         }
-//        Collections.reverse(al);
         return al;
     }
     public ArrayList<AgentBlock> getSafes(){
@@ -208,9 +196,7 @@ public class Board {
         for (int i=0; i<dimension;i++){
             for (int j=0;j<dimension;j++){
               pq.add(blocks[i][j], getDistance(i, j));
-//                if(blocks[i][j].isSafe() && blocks[i][j].isUnvisited()){
-//                    al.add(blocks[i][j]);
-//                }
+
             }
         }
         while (pq.size()!=0) {
@@ -219,7 +205,6 @@ public class Board {
                 al.add(ab);
             }
         }
-//        Collections.reverse(al);
         return al;
     }
 

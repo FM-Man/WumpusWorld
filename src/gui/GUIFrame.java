@@ -32,7 +32,6 @@ public class GUIFrame extends JFrame {
         breeze = "";
         stench = "";
         nextMove = "";
-//        story = "";
     }
 
     public static void addStory(String plotLine){

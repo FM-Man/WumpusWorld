@@ -39,7 +39,6 @@ public class ImageCombiner {
             instance = new ImageCombiner();
         return instance.combiner();
 
-//        return instance.combinePixelByPixel();
     }
     private ImageCombiner() {
 

@@ -5,6 +5,7 @@ import world.Board;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.PriorityQueue;
 
 public class Dijkstra {
@@ -23,10 +24,9 @@ public class Dijkstra {
         AgentBlock node = from;
         from.consider(null);
 
-        while (!node.equals(to)){
+        while (!Objects.equals(node, to)){
             ArrayList<AgentBlock> nbs = Board.getInstance().getNeighbours(node.i(),node.j());
-            for (int i = 0; i < nbs.size(); i++) {
-                AgentBlock nb = nbs.get(i);
+            for (AgentBlock nb : nbs) {
                 if ((!nb.isUnvisited() || nb.isSafe() || nb.equals(to)) && !nb.considered) {
                     nb.consider(node);
                     if (!queue.contains(nb))

@@ -10,8 +10,7 @@ import world.Board;
 import java.util.ArrayList;
 
 public class Agent {
-    private final int sleepTime = 100;
-    private ArrayList<AgentBlock> safeUnvisitedBlocks = new ArrayList<>();
+    private final int sleepTime = 1000;
 
     public Agent(){
         int steps = 0;
@@ -36,35 +35,33 @@ public class Agent {
             steps++;
 
             AgentBlock cb = board.getCurrentBlock();
-//            gf.addStory("STEP-"+steps+": ");
-            gf.move = "STEP-"+steps+": ";
+            GUIFrame.move = "STEP-"+steps+": ";
             System.out.print("STEP-"+ steps +": ");
 
 
             int result = cb.visit();
 
-//            gf.addStory(Board.getInstance().goldRemaining()+" golds yet to be found.");
-            gf.gold = Board.getInstance().goldRemaining()+" golds yet to be found";
+            GUIFrame.gold = Board.getInstance().goldRemaining()+" golds yet to be found";
             if(result==1){
-                gf.result = "You WON";
+                GUIFrame.result = "You WON";
                 gf.update();
                 break;
             }
             else if (result==-1){
-                gf.result = "Game Over";
-                gf.addStory("Game Over");
+                GUIFrame.result = "Game Over";
+                GUIFrame.addStory("Game Over");
                 System.out.println("Game Over");
                 break;
             }
             else {
                 if(cb.isBreezy()) {
-                    gf.breeze = "You feel a breeze";
-                    gf.addStory("You feel a breeze");
+                    GUIFrame.breeze = "You feel a breeze";
+                    GUIFrame.addStory("You feel a breeze");
                     System.out.println("You feel a breeze");
                 }
                 if(cb.isStenchy()) {
-                    gf.stench = "You smell stench";
-                    gf.addStory("You smell stench");
+                    GUIFrame.stench = "You smell stench";
+                    GUIFrame.addStory("You smell stench");
                     System.out.println("You smell stench");
                 }
                 ArrayList<AgentBlock> neighbours = board.getNeighbours(cb.i(),cb.j());
@@ -72,7 +69,7 @@ public class Agent {
                 for (AgentBlock nb: neighbours){
                     if (nb.haveWumpus()){
 
-                        gf.addStory("Shoot the wumpus at "+nb.i()+","+nb.j());
+                        GUIFrame.addStory("Shoot the wumpus at "+nb.i()+","+nb.j());
                         System.out.println("Shoot the wumpus at "+nb.i()+","+nb.j());
                         break;
                     }
@@ -84,8 +81,8 @@ public class Agent {
                 for (AgentBlock nb:neighbours){
                     if(nb.isSafe() && nb.isUnvisited() ){
                         Instruction instruction = getInstruction(cb, nb);
-                        gf.nextMove = "Move " + instruction.name();
-                        gf.addStory("Move " + instruction.name());
+                        GUIFrame.nextMove = "Move " + instruction.name();
+                        GUIFrame.addStory("Move " + instruction.name());
                         System.out.println("Move " + instruction.name());
                         board.setCurrentBlock(instruction);
                         nonVisitedSafeFound = true;
@@ -94,69 +91,24 @@ public class Agent {
                 }
 
                 if(!nonVisitedSafeFound){
-                    safeUnvisitedBlocks = board.getSafes();
+                    ArrayList<AgentBlock> safeUnvisitedBlocks = board.getSafes();
                     if(safeUnvisitedBlocks.size()>=1){
-                        steps = followSetPath(safeUnvisitedBlocks, cb, gf, board, steps, result);
+                        steps = followSetPath(safeUnvisitedBlocks, cb, gf, board, steps);
                     }
                     else{
                         ArrayList<AgentBlock> unsafes = board.getUnsafes();
-                        steps = followSetPath(unsafes, cb, gf, board, steps, result);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//                        for (AgentBlock nb:neighbours){
-//                            if(nb.isUnvisited()){
-//                                Instruction instruction = getInstruction(cb,nb);
-//                                gf.nextMove = "Move " + instruction.name();
-//                                gf.addStory("Move " + instruction.name());
-//                                System.out.println("Move "+instruction.name());
-//                                Board.getInstance().setCurrentBlock(instruction);
-////                                nonVisitedUnsafeFound = true;
-//                                break;
-//                            }
-//                        }
+                        steps = followSetPath(unsafes, cb, gf, board, steps);
                     }
                 }
 
-//                boolean safeFound = false;
-//                if(!nonVisitedSafeFound){
-//                    for (AgentBlock nb:neighbours){
-//                        if(nb.isSafe()){
-//                            Instruction instruction = getInstruction(cb,nb);
-//                            System.out.println("Move "+instruction.name());
-//                            board.setCurrentBlock(instruction);
-//                            safeFound = true;
-//                            break;
-//                        }
-//                    }
-//                }
-//                boolean nonVisitedUnsafeFound = false;
-//                if(!safeFound && !nonVisitedSafeFound){
-//                    for (AgentBlock nb:neighbours){
-//                        if(nb.isUnvisited()){
-//                            Instruction instruction = getInstruction(cb,nb);
-//                            System.out.println("Move "+instruction.name());
-//                            Board.getInstance().setCurrentBlock(instruction);
-//                            nonVisitedUnsafeFound = true;
-//                            break;
-//                        }
-//                    }
-//                }
-                
             }
 
             gf.update();
         }
     }
 
-    private int followSetPath(ArrayList<AgentBlock> listOfPossibilities, AgentBlock cb, GUIFrame gf, Board board, int steps, int result) {
-//        int result;
+    private int followSetPath(ArrayList<AgentBlock> listOfPossibilities, AgentBlock cb, GUIFrame gf, Board board, int steps) {
+
         AgentBlock t = listOfPossibilities.get(0);
         listOfPossibilities.remove(0);
         ArrayList<AgentBlock> way = Dijkstra.getPath(cb, t);
@@ -167,8 +119,8 @@ public class Agent {
             gf.update();
             Instruction instruction = getInstruction(way.get(0), way.get(1));
             way.remove(0);
-            gf.nextMove = "Move " + instruction.name();
-            gf.addStory("Move " + instruction.name());
+            GUIFrame.nextMove = "Move " + instruction.name();
+            GUIFrame.addStory("Move " + instruction.name());
             System.out.println("Move " + instruction.name());
             board.setCurrentBlock(instruction);
 
@@ -183,33 +135,33 @@ public class Agent {
             steps++;
 
             cb = board.getCurrentBlock();
-            gf.move = "STEP-" + steps + ": ";
-            gf.addStory("Move " + instruction.name());
+            GUIFrame.move = "STEP-" + steps + ": ";
+            GUIFrame.addStory("Move " + instruction.name());
 
             System.out.print("STEP-"+ steps +": ");
-            result = cb.visit();
+            int result = cb.visit();
 
-            gf.addStory(Board.getInstance().goldRemaining()+" golds yet to be found.");
+            GUIFrame.addStory(Board.getInstance().goldRemaining()+" golds yet to be found.");
             if(result ==1){
-                gf.result = "You WON";
+                GUIFrame.result = "You WON";
                 gf.update();
                 break;
             }
             else if (result ==-1){
-                gf.result = "Game Over";
-                gf.addStory("Game Over");
+                GUIFrame.result = "Game Over";
+                GUIFrame.addStory("Game Over");
                 System.out.println("Game Over");
                 break;
             }
             else {
                 if (cb.isBreezy()) {
-                    gf.breeze = "You feel a breeze";
-                    gf.addStory("You feel a breeze");
+                    GUIFrame.breeze = "You feel a breeze";
+                    GUIFrame.addStory("You feel a breeze");
                     System.out.println("You feel a breeze");
                 }
                 if (cb.isStenchy()) {
-                    gf.stench = "You smell a stench";
-                    gf.addStory("You feel a breeze");
+                    GUIFrame.stench = "You smell a stench";
+                    GUIFrame.addStory("You feel a breeze");
                     System.out.println("You smell stench");
                 }
                 PrintFrame.getInstance().updateFrame();
@@ -218,8 +170,8 @@ public class Agent {
         }
         Instruction instruction = getInstruction(way.get(0), way.get(1));
         way.remove(0);
-        gf.nextMove = "Move " + instruction.name();
-        gf.addStory("Move " + instruction.name());
+        GUIFrame.nextMove = "Move " + instruction.name();
+        GUIFrame.addStory("Move " + instruction.name());
         System.out.println("Move " + instruction.name());
         board.setCurrentBlock(instruction);
         return steps;

@@ -6,7 +6,7 @@ import world.Board;
 import javax.swing.*;
 import java.awt.*;
 
-public class GUIPanel extends JPanel /*implements ActionListener*/ {
+public class GUIPanel extends JPanel {
     final int PANEL_HEIGHT = 650;
     final int PANEL_WIDTH  = 950;
 
@@ -75,7 +75,6 @@ public class GUIPanel extends JPanel /*implements ActionListener*/ {
                 }
             }
         }
-//        g2d.drawString(GUIFrame.story,670,100);
         g2d.setFont(new Font("Tahoma",Font.BOLD,20));
         g2d.setPaint(Color.BLUE);
         int y=100;
@@ -103,7 +102,6 @@ public class GUIPanel extends JPanel /*implements ActionListener*/ {
         g2d.setFont(new Font("Tahoma",Font.BOLD,30));
         if(!GUIFrame.result.equals("")) {
             g2d.drawString(GUIFrame.result,670,y);
-            y+=50;
         }
 
     }
