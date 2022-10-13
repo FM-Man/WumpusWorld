@@ -1,12 +1,14 @@
 package world;
 
 import common.Instruction;
+import common.PQ;
 import gui.GUIFrame;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.PriorityQueue;
 import java.util.Scanner;
 
 public class Board {
@@ -172,28 +174,60 @@ public class Board {
     }
 
     public ArrayList<AgentBlock> getUnsafes(){
+//        ArrayList<AgentBlock> al = new ArrayList<>();
+//        for (int i=0; i<dimension;i++){
+//            for (int j=0;j<dimension;j++){
+//                if(blocks[i][j].getPit() == State.Possible || blocks[i][j].getWumpus() == State.Possible){
+//                    al.add(blocks[i][j]);
+//                }
+//            }
+//        }
+//        Collections.reverse(al);
+//        return al;
+
+        PQ pq = new PQ();
         ArrayList<AgentBlock> al = new ArrayList<>();
         for (int i=0; i<dimension;i++){
             for (int j=0;j<dimension;j++){
-                if(blocks[i][j].getPit() == State.Possible || blocks[i][j].getWumpus() == State.Possible){
-                    al.add(blocks[i][j]);
-                }
+                pq.add(blocks[i][j], getDistance(i, j));
+//                if(blocks[i][j].isSafe() && blocks[i][j].isUnvisited()){
+//                    al.add(blocks[i][j]);
+//                }
             }
         }
-        Collections.reverse(al);
+        while (pq.size()!=0) {
+            AgentBlock ab = pq.remove();
+            if(ab.getPit() == State.Possible || ab.getWumpus() == State.Possible){
+                al.add(ab);
+            }
+        }
+//        Collections.reverse(al);
         return al;
     }
     public ArrayList<AgentBlock> getSafes(){
+        PQ pq = new PQ();
         ArrayList<AgentBlock> al = new ArrayList<>();
         for (int i=0; i<dimension;i++){
             for (int j=0;j<dimension;j++){
-                if(blocks[i][j].isSafe() && blocks[i][j].isUnvisited()){
-                    al.add(blocks[i][j]);
-                }
+              pq.add(blocks[i][j], getDistance(i, j));
+//                if(blocks[i][j].isSafe() && blocks[i][j].isUnvisited()){
+//                    al.add(blocks[i][j]);
+//                }
             }
         }
-        Collections.reverse(al);
+        while (pq.size()!=0) {
+            AgentBlock ab = pq.remove();
+            if(ab.isSafe() && ab.isUnvisited()){
+                al.add(ab);
+            }
+        }
+//        Collections.reverse(al);
         return al;
+    }
+
+    private int getDistance(int i, int j) {
+        return Math.abs(currentBlock.i() - blocks[i][j].i()) +
+                Math.abs(currentBlock.j() - blocks[i][j].j());
     }
 
     public void reconfirmWumpusAndPit(){
