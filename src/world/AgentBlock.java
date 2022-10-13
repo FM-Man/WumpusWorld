@@ -271,10 +271,27 @@ public class AgentBlock implements Comparable<AgentBlock>{
         }
     }
 
-//
-//    public int getDegreeOfUnsafety(){
-//
-//    }
+
+    public int getDegreeOfUnsafety(){
+        int degree = 0;
+        if(pit == State.Exists || wumpus == State.Exists) {
+            return Integer.MAX_VALUE;
+        }
+        if(pit == State.Impossible && wumpus == State.Impossible){
+            return Integer.MIN_VALUE;
+        }
+        if(pit == State.Possible){
+            for (AgentBlock nb: neighbours){
+                if(nb.breeze == State.Exists) degree++;
+            }
+        }
+        if(wumpus == State.Possible){
+            for (AgentBlock nb: neighbours){
+                if(nb.wumpus == State.Exists) degree++;
+            }
+        }
+        return degree;
+    }
 
 
 

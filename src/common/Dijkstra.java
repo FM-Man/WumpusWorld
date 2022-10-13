@@ -22,6 +22,7 @@ public class Dijkstra {
 //        AgentBlock prev = null;
         AgentBlock node = from;
         from.consider(null);
+
         while (!node.equals(to)){
             ArrayList<AgentBlock> nbs = Board.getInstance().getNeighbours(node.i(),node.j());
             for (AgentBlock nb : nbs) {
