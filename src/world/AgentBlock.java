@@ -12,6 +12,7 @@ public class AgentBlock implements Comparable<AgentBlock>{
     private ArrayList<AgentBlock> neighbours;
 
     private boolean visited;
+    private boolean visitedBefore=false;
 
     private int breeze = State.NotKnown;
     private int stench = State.NotKnown;
@@ -50,24 +51,28 @@ public class AgentBlock implements Comparable<AgentBlock>{
 
         System.out.println(i+","+j+" visited.");
         GUIFrame.move+=i+","+j+" visited";
-        if(block.isWithGold())
-            if(Board.getInstance().goldFound()==1)
+        if(block.isWithGold() && !visitedBefore)
+            if(Board.getInstance().goldFound()==1) {
+                visitedBefore = true;
                 return 1;
+            }
 
-        if(pit == State.Exists || wumpus == State.Exists)
+        if(pit == State.Exists || wumpus == State.Exists) {
+            visitedBefore = true;
             return -1;
+        }
         else {
             for (AgentBlock a:neighbours){
+                if(isBreezy())  a.neighbourBreeze(State.Exists,this);
+                else            a.neighbourBreeze(State.Impossible,this);
 
-                if(isBreezy())
-                    a.neighbourBreeze(State.Exists,this);
-                else a.neighbourBreeze(State.Impossible,this);
-                if(isStenchy())
-                    a.neighbourStench(State.Exists,this);
-                else a.neighbourStench(State.Impossible,this);
+                if(isStenchy()) a.neighbourStench(State.Exists,this);
+                else            a.neighbourStench(State.Impossible,this);
             }
+            visitedBefore = true;
             return 0;
         }
+
     }
 
 
@@ -290,9 +295,16 @@ public class AgentBlock implements Comparable<AgentBlock>{
                 if(nb.wumpus == State.Exists) degree++;
             }
         }
-        return degree;
+        return degree/neighbours.size();
     }
 
+    public boolean atLeastOneNeighbourIsVisited(){
+        boolean flag = false;
+        for (AgentBlock nb:neighbours){
+            if(nb.visited) flag = true;
+        }
+        return flag;
+    }
 
 
 

@@ -14,6 +14,7 @@ public class GUIFrame extends JFrame {
     public GUIFrame(){
         panel = new GUIPanel();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setTitle("Wumpus World");
         this.add(panel);
         this.pack();
         this.setLocationRelativeTo(null);

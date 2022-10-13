@@ -30,6 +30,8 @@ public class GUIPanel extends JPanel /*implements ActionListener*/ {
     private final Image bs = new ImageIcon("arts/allPossibleCombination/17.bs.png").getImage();
     private final Image p = new ImageIcon("arts/allPossibleCombination/18.p.png").getImage();
     private final Image w = new ImageIcon("arts/allPossibleCombination/19.w.png").getImage();
+    private final Image avbs = new ImageIcon("arts/allPossibleCombination/20.avbs.png").getImage();
+    private final Image vbs = new ImageIcon("arts/allPossibleCombination/21.vbs.png").getImage();
 
     private final AgentBlock[][] agentBlocks;
 
@@ -68,12 +70,14 @@ public class GUIPanel extends JPanel /*implements ActionListener*/ {
                     case "bs" -> g2d.drawImage(bs, j * 65, i * 65, 65, 65, null);
                     case "p" -> g2d.drawImage(p, j * 65, i * 65, 65, 65, null);
                     case "w" -> g2d.drawImage(w, j * 65, i * 65, 65, 65, null);
+                    case "avbs" -> g2d.drawImage(avbs, j * 65, i * 65, 65, 65, null);
+                    case "vbs" -> g2d.drawImage(vbs, j * 65, i * 65, 65, 65, null);
                 }
             }
         }
 //        g2d.drawString(GUIFrame.story,670,100);
         g2d.setFont(new Font("Tahoma",Font.BOLD,20));
-        g2d.setPaint(Color.RED);
+        g2d.setPaint(Color.BLUE);
         int y=100;
         if(!GUIFrame.move.equals("")) {
             g2d.drawString(GUIFrame.move,670,y);
@@ -91,13 +95,17 @@ public class GUIPanel extends JPanel /*implements ActionListener*/ {
             g2d.drawString(GUIFrame.stench,670,y);
             y+=50;
         }
+        if(!GUIFrame.nextMove.equals("")) {
+            g2d.drawString(GUIFrame.nextMove,670,y);
+            y+=50;
+        }
+        g2d.setPaint(Color.GREEN);
+        g2d.setFont(new Font("Tahoma",Font.BOLD,30));
         if(!GUIFrame.result.equals("")) {
             g2d.drawString(GUIFrame.result,670,y);
             y+=50;
         }
-        if(!GUIFrame.nextMove.equals("")) {
-            g2d.drawString(GUIFrame.nextMove,670,y);
-        }
+
     }
     
 }

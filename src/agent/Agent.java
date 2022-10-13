@@ -23,7 +23,7 @@ public class Agent {
         while (true){
 
             try {
-                Thread.sleep(5000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -38,11 +38,15 @@ public class Agent {
 //            gf.addStory("STEP-"+steps+": ");
             gf.move = "STEP-"+steps+": ";
             System.out.print("STEP-"+ steps +": ");
+
+
             int result = cb.visit();
 
 //            gf.addStory(Board.getInstance().goldRemaining()+" golds yet to be found.");
             gf.gold = Board.getInstance().goldRemaining()+" golds yet to be found";
             if(result==1){
+                gf.result = "You WON";
+                gf.update();
                 break;
             }
             else if (result==-1){
@@ -88,7 +92,7 @@ public class Agent {
                         }
                         else {
                             if(!safeUnvisitedBlocks.contains(nb))
-                                safeUnvisitedBlocks.add(nb);
+                                safeUnvisitedBlocks.add(0,nb);
                         }
                     }
                 }
@@ -101,7 +105,7 @@ public class Agent {
                         ArrayList<AgentBlock> unsafes = new ArrayList<>();
                         for(int i=0;i<10;i++){
                             for(int j=0; j<10;j++){
-                                if(!board.getBlocks()[i][j].isSafe()){
+                                if(!board.getBlocks()[i][j].isSafe() && board.getBlocks()[i][j].atLeastOneNeighbourIsVisited()){
                                     boolean added = false;
                                     for (int k=0;k<unsafes.size();k++){
                                         if(board.getBlocks()[i][j].getDegreeOfUnsafety() < unsafes.get(k).getDegreeOfUnsafety()) {
@@ -187,7 +191,7 @@ public class Agent {
             board.setCurrentBlock(instruction);
 
             try {
-                Thread.sleep(5000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -205,6 +209,8 @@ public class Agent {
 
             gf.addStory(Board.getInstance().goldRemaining()+" golds yet to be found.");
             if(result ==1){
+                gf.result = "You WON";
+                gf.update();
                 break;
             }
             else if (result ==-1){
