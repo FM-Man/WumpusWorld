@@ -45,17 +45,16 @@ public class PrintFrame {
         agentBlocks = Board.getInstance().getBlocks();
         for (int i=0;i<10;i++){
             for (int j=0;j<10;j++){
-//
-//                if(
-//                        i==Board.getInstance().getCurrentBlock().i() &&
-//                                j==Board.getInstance().getCurrentBlock().j()
-//                ){
-//                    System.out.print("a");
-//                }
-//                else System.out.print(" ");
 
-                System.out.print(agentBlocks[i][j].stateForImage());
-                System.out.print("\t|");
+                if(
+                        i==Board.getInstance().getCurrentBlock().i() &&
+                                j==Board.getInstance().getCurrentBlock().j()
+                ){
+                    System.out.print("a");
+                }
+                else System.out.print(" ");
+                System.out.print(agentBlocks[i][j].stateForPrinting());
+                System.out.print("|");
 
             }
             System.out.println();

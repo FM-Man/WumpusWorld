@@ -2,7 +2,7 @@ package world;
 
 import java.util.ArrayList;
 
-public class AgentBlock{
+public class AgentBlock implements Comparable<AgentBlock>{
     private final int i;
     private final int j;
     private final InformationBlock block;
@@ -268,4 +268,35 @@ public class AgentBlock{
         }
     }
 
+
+
+
+/**           djicksta stuffs        **/
+
+    public int distance = Integer.MAX_VALUE;
+    public AgentBlock from = null;
+    public boolean considered = false;
+
+    public void consider(AgentBlock from){
+        if(from != null)    distance = from.distance + 1;
+        else                distance = 0;
+
+        this.from = from;
+        considered = true;
+    }
+
+    public void refresh(){
+        distance = Integer.MAX_VALUE;
+        from = null;
+        considered = false;
+    }
+
+    @Override
+    public int compareTo(AgentBlock o) {
+        return distance-o.distance;
+    }
+
+    public String toString(){
+        return i+","+j;
+    }
 }
