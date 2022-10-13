@@ -7,8 +7,6 @@ import gui.GUIFrame;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.PriorityQueue;
 import java.util.Scanner;
 
 public class Board {
@@ -189,7 +187,7 @@ public class Board {
         ArrayList<AgentBlock> al = new ArrayList<>();
         for (int i=0; i<dimension;i++){
             for (int j=0;j<dimension;j++){
-                pq.add(blocks[i][j], getDistance(i, j));
+                pq.add(blocks[i][j], blocks[i][j].getDegreeOfUnsafety());
 //                if(blocks[i][j].isSafe() && blocks[i][j].isUnvisited()){
 //                    al.add(blocks[i][j]);
 //                }

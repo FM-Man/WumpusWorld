@@ -10,7 +10,7 @@ import world.Board;
 import java.util.ArrayList;
 
 public class Agent {
-
+    private final int sleepTime = 100;
     private ArrayList<AgentBlock> safeUnvisitedBlocks = new ArrayList<>();
 
     public Agent(){
@@ -24,7 +24,7 @@ public class Agent {
             board.reconfirmWumpusAndPit();
 
             try {
-                Thread.sleep(1000);
+                Thread.sleep(sleepTime);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -83,31 +83,24 @@ public class Agent {
                 boolean nonVisitedSafeFound = false;
                 for (AgentBlock nb:neighbours){
                     if(nb.isSafe() && nb.isUnvisited() ){
-                        if(!nonVisitedSafeFound) {
-                            Instruction instruction = getInstruction(cb, nb);
-                            gf.nextMove = "Move " + instruction.name();
-                            gf.addStory("Move " + instruction.name());
-                            System.out.println("Move " + instruction.name());
-                            board.setCurrentBlock(instruction);
-                            nonVisitedSafeFound = true;
-                        }
-                        else {
-                            if(!safeUnvisitedBlocks.contains(nb))
-                                safeUnvisitedBlocks.add(0,nb);
-                        }
+                        Instruction instruction = getInstruction(cb, nb);
+                        gf.nextMove = "Move " + instruction.name();
+                        gf.addStory("Move " + instruction.name());
+                        System.out.println("Move " + instruction.name());
+                        board.setCurrentBlock(instruction);
+                        nonVisitedSafeFound = true;
+                        break;
                     }
                 }
 
                 if(!nonVisitedSafeFound){
+                    safeUnvisitedBlocks = board.getSafes();
                     if(safeUnvisitedBlocks.size()>=1){
-                        safeUnvisitedBlocks = board.getSafes();
                         steps = followSetPath(safeUnvisitedBlocks, cb, gf, board, steps, result);
                     }
                     else{
                         ArrayList<AgentBlock> unsafes = board.getUnsafes();
-
                         steps = followSetPath(unsafes, cb, gf, board, steps, result);
-
 //
 //
 //
@@ -180,7 +173,7 @@ public class Agent {
             board.setCurrentBlock(instruction);
 
             try {
-                Thread.sleep(1000);
+                Thread.sleep(sleepTime);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

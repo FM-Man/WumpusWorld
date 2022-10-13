@@ -25,8 +25,9 @@ public class Dijkstra {
 
         while (!node.equals(to)){
             ArrayList<AgentBlock> nbs = Board.getInstance().getNeighbours(node.i(),node.j());
-            for (AgentBlock nb : nbs) {
-                if ((!nb.isUnvisited() || nb.isSafe()) && !nb.considered) {
+            for (int i = 0; i < nbs.size(); i++) {
+                AgentBlock nb = nbs.get(i);
+                if ((!nb.isUnvisited() || nb.isSafe() || nb.equals(to)) && !nb.considered) {
                     nb.consider(node);
                     if (!queue.contains(nb))
                         queue.add(nb);
