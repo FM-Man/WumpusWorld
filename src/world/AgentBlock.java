@@ -101,7 +101,8 @@ public class AgentBlock implements Comparable<AgentBlock>{
     }
 
 
-
+    public int getStench(){return stench;}
+    public int getBreeze(){return breeze;}
 
 
     public int i(){return i;}
@@ -174,14 +175,14 @@ public class AgentBlock implements Comparable<AgentBlock>{
     public boolean onlyOneNeighbourPitPossible(){
         int pp = 0;
         for(AgentBlock n:neighbours){
-            if(n.getPit()==State.Possible)
+            if(n.getPit()!=State.Impossible)
                 pp++;
         }
         return pp==1;
     }
     public void confirmNeighbourPit(){
         for (AgentBlock n:neighbours){
-            if(n.getPit()==State.Possible){
+            if(n.getPit()!=State.Impossible){
                 n.pit = State.Exists;
             }
         }
@@ -189,14 +190,14 @@ public class AgentBlock implements Comparable<AgentBlock>{
     public boolean onlyOneNeighbourWumpusPossible(){
         int pp = 0;
         for(AgentBlock n:neighbours){
-            if(n.getWumpus()==State.Possible)
+            if(n.getWumpus()!=State.Impossible)
                 pp++;
         }
         return pp==1;
     }
     public void confirmNeighbourWumpus(){
         for (AgentBlock n:neighbours){
-            if(n.getWumpus()==State.Possible){
+            if(n.getWumpus()!=State.Impossible){
                 n.wumpus = State.Exists;
             }
         }
@@ -232,7 +233,7 @@ public class AgentBlock implements Comparable<AgentBlock>{
                         neighbour.neighbourBreeze(breeze, this);
             }
             case State.Impossible -> {
-                if(isBreezy() && onlyOneNeighbourPitPossible())
+                if(breeze==State.Exists && onlyOneNeighbourPitPossible())
                     confirmNeighbourPit();
             }
             case State.Possible ->
@@ -268,7 +269,7 @@ public class AgentBlock implements Comparable<AgentBlock>{
                         neighbour.neighbourStench(stench,this);
             }
             case State.Impossible -> {
-                if(isStenchy() && onlyOneNeighbourWumpusPossible())
+                if(stench == State.Exists && onlyOneNeighbourWumpusPossible())
                     confirmNeighbourWumpus();
             }
             case State.Possible ->

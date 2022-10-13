@@ -21,6 +21,7 @@ public class Agent {
 
         GUIFrame gf = new GUIFrame();
         while (true){
+            board.reconfirmWumpusAndPit();
 
             try {
                 Thread.sleep(1000);
@@ -99,25 +100,11 @@ public class Agent {
 
                 if(!nonVisitedSafeFound){
                     if(safeUnvisitedBlocks.size()>=1){
+                        safeUnvisitedBlocks = board.getSafes();
                         steps = followSetPath(safeUnvisitedBlocks, cb, gf, board, steps, result);
                     }
                     else{
-                        ArrayList<AgentBlock> unsafes = new ArrayList<>();
-                        for(int i=0;i<10;i++){
-                            for(int j=0; j<10;j++){
-                                if(!board.getBlocks()[i][j].isSafe() && board.getBlocks()[i][j].atLeastOneNeighbourIsVisited()){
-                                    boolean added = false;
-                                    for (int k=0;k<unsafes.size();k++){
-                                        if(board.getBlocks()[i][j].getDegreeOfUnsafety() < unsafes.get(k).getDegreeOfUnsafety()) {
-                                            unsafes.add(k,board.getBlocks()[i][j]);
-                                            added = true;
-                                            break;
-                                        }
-                                    }
-                                    if (!added) unsafes.add(board.getBlocks()[i][j]);
-                                }
-                            }
-                        }
+                        ArrayList<AgentBlock> unsafes = board.getUnsafes();
 
                         steps = followSetPath(unsafes, cb, gf, board, steps, result);
 
@@ -182,6 +169,8 @@ public class Agent {
         ArrayList<AgentBlock> way = Dijkstra.getPath(cb, t);
         System.out.println(way);
         while (way.size() > 2) {
+            board.reconfirmWumpusAndPit();
+
             gf.update();
             Instruction instruction = getInstruction(way.get(0), way.get(1));
             way.remove(0);

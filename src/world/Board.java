@@ -6,6 +6,7 @@ import gui.GUIFrame;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class Board {
@@ -169,4 +170,41 @@ public class Board {
     public int goldRemaining(){
         return numberOfGold-goldFound;
     }
+
+    public ArrayList<AgentBlock> getUnsafes(){
+        ArrayList<AgentBlock> al = new ArrayList<>();
+        for (int i=0; i<dimension;i++){
+            for (int j=0;j<dimension;j++){
+                if(blocks[i][j].getPit() == State.Possible || blocks[i][j].getWumpus() == State.Possible){
+                    al.add(blocks[i][j]);
+                }
+            }
+        }
+        Collections.reverse(al);
+        return al;
+    }
+    public ArrayList<AgentBlock> getSafes(){
+        ArrayList<AgentBlock> al = new ArrayList<>();
+        for (int i=0; i<dimension;i++){
+            for (int j=0;j<dimension;j++){
+                if(blocks[i][j].isSafe() && blocks[i][j].isUnvisited()){
+                    al.add(blocks[i][j]);
+                }
+            }
+        }
+        Collections.reverse(al);
+        return al;
+    }
+
+    public void reconfirmWumpusAndPit(){
+        for (int i=0;i<dimension;i++){
+            for (int j=0;j<dimension;j++){
+                if(blocks[i][j].getStench() == State.Exists && blocks[i][j].onlyOneNeighbourWumpusPossible())
+                    blocks[i][j].confirmNeighbourWumpus();
+                if(blocks[i][j].getBreeze() == State.Exists && blocks[i][j].onlyOneNeighbourPitPossible())
+                    blocks[i][j].confirmNeighbourPit();
+            }
+        }
+    }
+
 }
