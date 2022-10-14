@@ -2,6 +2,7 @@ package world;
 
 import common.Instruction;
 import common.PQ;
+import common.Position;
 import gui.GUIFrame;
 
 import java.io.File;
@@ -12,6 +13,7 @@ import java.util.Scanner;
 public class Board {
 
     private final String inputFilePath = "input2.txt";
+    private final boolean random = false;
 
     private final int dimension=10;
     private final AgentBlock[][] blocks;
@@ -33,22 +35,84 @@ public class Board {
         }
 
         int[][] informationArray = new int[dimension][dimension];
-        int AGENT = 0;
-        int WUMPUS = 1;
-        int GOLD = 3;
-        int PIT = 4;
-        for (int i = 0; scanner.hasNextLine(); i++){
-            String[] line = scanner.nextLine().split(",",0);
-            for (int j=0; j<line.length;j++){
-                int SAFE = 2;
-                switch (line[j]) {
-                    case "a", "A"   -> informationArray[i][j] = AGENT;
-                    case "w", "W"   -> informationArray[i][j] = WUMPUS;
-                    case "s", "S"   -> informationArray[i][j] = SAFE;
-                    case "g", "G"   -> informationArray[i][j] = GOLD;
-                    default         -> informationArray[i][j] = PIT;
+        final int AGENT = 1;
+        final int WUMPUS = 2;
+        final int SAFE = 0;
+        final int GOLD = 4;
+        final int PIT = 3;
+        if(!random){
+            for (int i = 0; scanner.hasNextLine(); i++) {
+                String[] line = scanner.nextLine().split(",", 0);
+                for (int j = 0; j < line.length; j++) {
+                    switch (line[j]) {
+                        case "a", "A" -> informationArray[i][j] = AGENT;
+                        case "w", "W" -> informationArray[i][j] = WUMPUS;
+                        case "s", "S" -> informationArray[i][j] = SAFE;
+                        case "g", "G" -> informationArray[i][j] = GOLD;
+                        default -> informationArray[i][j] = PIT;
+                    }
                 }
             }
+        }
+        else {
+            Position agentPosition = new Position((int)(Math.random()*100));
+            int numberOfPit = (int) (Math.random()*10+5);
+            int numberOfWumpus = (int)(Math.random()*2+1);
+            int numberOfGold = (int)(Math.random()*5+5);
+            ArrayList<Position> goldPositions = new ArrayList<>();
+            for (int i=0;i<numberOfGold;i++){
+                Position p= new Position((int)(Math.random()*100));
+                if(!goldPositions.contains(p) && !p.equals(agentPosition)) goldPositions.add(p);
+                else i--;
+            }
+            ArrayList<Position> pitPositions = new ArrayList<>();
+            for (int i=0;i<numberOfPit;i++){
+                Position p= new Position((int)(Math.random()*100));
+                if(!goldPositions.contains(p)
+                        && !pitPositions.contains(p)
+                        && !p.equals(agentPosition)
+                        && !p.adjacent(agentPosition)
+                )
+                    pitPositions.add(p);
+                else i--;
+            }
+            ArrayList<Position> wumpusPositions = new ArrayList<>();
+            for (int i=0;i<numberOfWumpus;i++){
+                Position p= new Position((int)(Math.random()*100));
+                if(!goldPositions.contains(p)
+                        && !pitPositions.contains(p)
+                        && !wumpusPositions.contains(p)
+                        && !p.equals(agentPosition)
+                        && !p.adjacent(agentPosition)
+                )
+                    wumpusPositions.add(p);
+                else i--;
+            }
+            for(Position p:goldPositions){
+                int blocked =0;
+                for (int i=0; i<p.getAdjacents().size();i++){
+                    if(pitPositions.contains(p.getAdjacents().get(i))
+                            || wumpusPositions.contains(p.getAdjacents().get(i))
+                    ) blocked++;
+                }
+                if (blocked==p.getAdjacents().size()) goldPositions.remove(p);
+            }
+
+            for (int i=0;i<10;i++){
+                for(int j=0;j<10;j++){
+                    Position p = new Position(i,j);
+                    if(goldPositions.contains(p))
+                        informationArray[i][j] = GOLD;
+                    else if(pitPositions.contains(p))
+                        informationArray[i][j] = PIT;
+                    else if(agentPosition.equals(p))
+                        informationArray[i][j] = AGENT;
+                    else if(wumpusPositions.contains(p))
+                        informationArray[i][j] = WUMPUS;
+                    else informationArray[i][j] = SAFE;
+                }
+            }
+
         }
 
 
@@ -133,12 +197,12 @@ public class Board {
     }
 
 
-    public ArrayList<AgentBlock> getNeighbours(int i, int j){
+    public ArrayList<AgentBlock> getNeighbours(Position p){
         ArrayList<AgentBlock> a = new ArrayList<>();
-        if(i<dimension-1) a.add(blocks[i+1][j]);
-        if(j<dimension-1) a.add(blocks[i][j+1]);
-        if(i>0) a.add(blocks[i-1][j]);
-        if(j>0) a.add(blocks[i][j-1]);
+        if(p.i<dimension-1) a.add(blocks[p.i+1][p.j]);
+        if(p.j<dimension-1) a.add(blocks[p.i][p.j+1]);
+        if(p.i>0) a.add(blocks[p.i-1][p.j]);
+        if(p.j>0) a.add(blocks[p.i][p.j-1]);
         return a;
     }
     public AgentBlock getCurrentBlock(){
@@ -146,16 +210,16 @@ public class Board {
     }
     public void setCurrentBlock(Instruction instruction){
         if(instruction.equals(Instruction.LEFT)){
-            currentBlock = blocks[currentBlock.i()][currentBlock.j()-1];
+            currentBlock = blocks[currentBlock.position.i][currentBlock.position.j-1];
         }
         else if(instruction.equals(Instruction.RIGHT)){
-            currentBlock = blocks[currentBlock.i()][currentBlock.j()+1];
+            currentBlock = blocks[currentBlock.position.i][currentBlock.position.j+1];
         }
         else if(instruction.equals(Instruction.UP)){
-            currentBlock = blocks[currentBlock.i()-1][currentBlock.j()];
+            currentBlock = blocks[currentBlock.position.i-1][currentBlock.position.j];
         }
         else{
-            currentBlock = blocks[currentBlock.i()+1][currentBlock.j()];
+            currentBlock = blocks[currentBlock.position.i+1][currentBlock.position.j];
         }
     }
     public int goldFound(){
@@ -209,8 +273,8 @@ public class Board {
     }
 
     private int getDistance(int i, int j) {
-        return Math.abs(currentBlock.i() - blocks[i][j].i()) +
-                Math.abs(currentBlock.j() - blocks[i][j].j());
+        return Math.abs(currentBlock.position.i - i) +
+                Math.abs(currentBlock.position.j - j);
     }
 
     public void reconfirmWumpusAndPit(){

@@ -1,5 +1,6 @@
 package gui;
 
+import common.Position;
 import world.AgentBlock;
 import world.Board;
 
@@ -20,10 +21,8 @@ public class PrintFrame {
         agentBlocks = Board.getInstance().getBlocks();
         for (int i=0;i<10;i++){
             for (int j=0;j<10;j++){
-
-                if(i==Board.getInstance().getCurrentBlock().i() &&
-                    j==Board.getInstance().getCurrentBlock().j())
-                {
+                Position p = new Position(i,j);
+                if(p.equals(Board.getInstance().getCurrentBlock().position)) {
                     System.out.print("a");
                 }
                 else System.out.print(" ");
@@ -45,11 +44,8 @@ public class PrintFrame {
         agentBlocks = Board.getInstance().getBlocks();
         for (int i=0;i<10;i++){
             for (int j=0;j<10;j++){
-
-                if(
-                        i==Board.getInstance().getCurrentBlock().i() &&
-                                j==Board.getInstance().getCurrentBlock().j()
-                ){
+                Position p = new Position(i,j);
+                if(p.equals(Board.getInstance().getCurrentBlock().position)){
                     System.out.print("a");
                 }
                 else System.out.print(" ");

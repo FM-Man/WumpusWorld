@@ -1,12 +1,14 @@
 package world;
 
+import common.Position;
 import gui.GUIFrame;
 
 import java.util.ArrayList;
 
 public class AgentBlock implements Comparable<AgentBlock>{
-    private final int i;
-    private final int j;
+    public final Position position;
+//    private final int i;
+//    private final int j;
     private final InformationBlock block;
 
     private ArrayList<AgentBlock> neighbours;
@@ -20,14 +22,15 @@ public class AgentBlock implements Comparable<AgentBlock>{
     private int wumpus = State.NotKnown;
 
     public AgentBlock(int i, int j, InformationBlock block) {
-        this.i = i;
-        this.j = j;
+        position = new Position(i,j);
+//        this.i = i;
+//        this.j = j;
         this.block = block;
         visited =  false;
     }
 
     public void setNeighbours(){
-        neighbours = Board.getInstance().getNeighbours(this.i,this.j);
+        neighbours = Board.getInstance().getNeighbours(this.position);
     }
 
 
@@ -47,8 +50,8 @@ public class AgentBlock implements Comparable<AgentBlock>{
 
 
 
-        System.out.println(i+","+j+" visited.");
-        GUIFrame.move+=i+","+j+" visited";
+        System.out.println(position.ij+" visited.");
+        GUIFrame.move+=position.ij+" visited";
         if(block.isWithGold() && !visitedBefore)
             if(Board.getInstance().goldFound()==1) {
                 visitedBefore = true;
@@ -97,8 +100,8 @@ public class AgentBlock implements Comparable<AgentBlock>{
     public int getBreeze(){return breeze;}
 
 
-    public int i(){return i;}
-    public int j(){return j;}
+//    public int i(){return i;}
+//    public int j(){return j;}
 
     public String stateForPrinting(){
         String s ="";
@@ -122,8 +125,7 @@ public class AgentBlock implements Comparable<AgentBlock>{
 
     public String stateForImage(){
         String retString = "";
-        if(Board.getInstance().getCurrentBlock().i() == i &&
-            Board.getInstance().getCurrentBlock().j() == j)
+        if(Board.getInstance().getCurrentBlock().position.equals(position))
         {
             if(!visited)
                 visited = true;
@@ -320,6 +322,6 @@ public class AgentBlock implements Comparable<AgentBlock>{
     }
 
     public String toString(){
-        return i+","+j;
+        return position.i+","+position.j;
     }
 }

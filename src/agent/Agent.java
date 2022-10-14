@@ -64,13 +64,13 @@ public class Agent {
                     GUIFrame.addStory("You smell stench");
                     System.out.println("You smell stench");
                 }
-                ArrayList<AgentBlock> neighbours = board.getNeighbours(cb.i(),cb.j());
+                ArrayList<AgentBlock> neighbours = board.getNeighbours(cb.position);
 
                 for (AgentBlock nb: neighbours){
                     if (nb.haveWumpus()){
 
-                        GUIFrame.addStory("Shoot the wumpus at "+nb.i()+","+nb.j());
-                        System.out.println("Shoot the wumpus at "+nb.i()+","+nb.j());
+                        GUIFrame.addStory("Shoot the wumpus at "+nb.position.ij);
+                        System.out.println("Shoot the wumpus at "+nb.position.ij);
                         break;
                     }
                 }
@@ -178,9 +178,9 @@ public class Agent {
     }
 
     private Instruction getInstruction(AgentBlock cb, AgentBlock nb){
-        if(nb.j()==cb.j()+1) return Instruction.RIGHT;
-        else if(nb.j()==cb.j()-1) return Instruction.LEFT;
-        else if(nb.i()==cb.i()+1) return Instruction.DOWN;
+        if(nb.position.j==cb.position.j+1) return Instruction.RIGHT;
+        else if(nb.position.j==cb.position.j-1) return Instruction.LEFT;
+        else if(nb.position.i==cb.position.i+1) return Instruction.DOWN;
         else return Instruction.UP;
     }
 
